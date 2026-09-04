@@ -3,7 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import KeyboardNav from '../components/KeyboardNav.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE } from '../consts';
 ---
 
 <!doctype html>
@@ -18,7 +18,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 			<div class="sun" aria-hidden="true"></div>
 			<div class="grid-floor" aria-hidden="true"></div>
 			<div class="hero-copy">
-				<h1 data-text="Hello, Astronaut!">🧑‍🚀 Hello, Astronaut!</h1>
+				<h1 class="wordmark">{SITE_NAME}</h1>
 				<p class="tagline">{SITE_DESCRIPTION}</p>
 				<a class="cta" href="/blog" data-knav>[ read the logs ]</a>
 			</div>
@@ -67,8 +67,8 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		position: relative;
 		display: grid;
 		place-items: center;
-		min-height: 62vh;
-		padding: 4em 1em 6em;
+		min-height: 50vh;
+		padding: 3em 1em 4.5em;
 		overflow: hidden;
 		border-bottom: 1px solid var(--line);
 	}
@@ -76,8 +76,8 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	/* the sun: sunset gradient disc, sliced by horizontal bands */
 	.sun {
 		position: absolute;
-		top: 30%;
-		width: min(30rem, 80vw);
+		top: 26%;
+		width: min(25rem, 72vw);
 		aspect-ratio: 1;
 		border-radius: 50%;
 		background: var(--sunset);
@@ -122,22 +122,28 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 	.hero-copy h1 {
 		position: relative;
-		font-size: clamp(1.8rem, 6vw, 3.4rem);
-		margin-bottom: 0.4em;
+		font-size: clamp(1.9rem, 6vw, 3.2rem);
+		margin: 0 0 0.4em 0;
+		/* a domain name is lowercase; the global uppercase rule is wrong here */
+		text-transform: lowercase;
+		letter-spacing: -0.01em;
 		color: #fff;
 		text-shadow:
-			0 0 8px rgba(255, 46, 151, 0.9),
-			0 0 30px rgba(255, 46, 151, 0.5),
-			2px 0 0 rgba(0, 229, 255, 0.55),
-			-2px 0 0 rgba(255, 46, 151, 0.55);
+			0 0 10px rgba(217, 98, 143, 0.55),
+			0 0 34px rgba(217, 98, 143, 0.3),
+			1.5px 0 0 rgba(74, 134, 200, 0.4),
+			-1.5px 0 0 rgba(217, 98, 143, 0.4);
 	}
 
 	.tagline {
-		color: var(--cyan);
+		/* one step brighter than the --blue used for links: this is the site's
+		   subtitle and sits over the sun, so it needs to carry more than body text */
+		color: var(--blue-soft);
 		text-shadow:
 			0 0 6px rgba(7, 1, 15, 0.95),
 			0 0 14px rgba(7, 1, 15, 0.9),
-			var(--glow-cyan);
+			0 0 3px rgba(111, 163, 220, 0.5),
+			0 0 16px rgba(111, 163, 220, 0.25);
 		letter-spacing: 0.05em;
 		margin-bottom: 2em;
 	}
@@ -146,7 +152,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		display: inline-block;
 		padding: 0.6em 1.6em;
 		color: var(--void);
-		background: var(--cyan);
+		background: var(--blue);
 		border: none;
 		font-weight: 700;
 		letter-spacing: 0.08em;
@@ -155,7 +161,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	}
 	.cta:hover {
 		color: var(--void);
-		background: var(--magenta);
+		background: var(--rose);
 		box-shadow: 0 0 30px rgba(255, 46, 151, 0.7);
 		text-shadow: none;
 	}

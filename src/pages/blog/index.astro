@@ -68,7 +68,7 @@ const posts = (await getCollection('blog')).sort(
 	}
 	h1::before {
 		content: '$ ';
-		color: var(--cyan);
+		color: var(--blue);
 	}
 
 	.meta {
@@ -110,7 +110,7 @@ const posts = (await getCollection('blog')).sort(
 	.post-list a:hover,
 	.post-list a:focus-visible {
 		outline: none;
-		border-color: var(--magenta);
+		border-color: var(--rose);
 		background: linear-gradient(
 			90deg,
 			rgba(255, 46, 151, 0.18) 0%,
@@ -118,7 +118,7 @@ const posts = (await getCollection('blog')).sort(
 			transparent 100%
 		);
 		transform: translateX(4px);
-		box-shadow: -3px 0 0 0 var(--cyan);
+		box-shadow: -3px 0 0 0 var(--blue);
 	}
 
 	.idx {
@@ -155,13 +155,13 @@ const posts = (await getCollection('blog')).sort(
 		white-space: nowrap;
 	}
 	.date {
-		color: var(--cyan);
+		color: var(--blue);
 		font-size: 0.75rem;
 		opacity: 0.8;
 	}
 
 	.arrow {
-		color: var(--magenta);
+		color: var(--rose);
 		opacity: 0;
 		transition: opacity 0.18s ease;
 	}

@@ -1,4 +1,4 @@
-# Style guide — NEON://STDOUT
+# Style guide — oooops.dev//stdout
 
 How this blog is styled, why it is built the way it is, and the rules to follow when
 extending it. Written for whoever (human or agent) touches the visuals next.
@@ -7,7 +7,7 @@ extending it. Written for whoever (human or agent) touches the visuals next.
 
 ## 1. The brief
 
-A coding blog in a **synthwave / vaporwave** register, but set in **monospace**, with
+The blog for **oooops.dev**, in a **synthwave / vaporwave** register, but set in **monospace**, with
 **keyboard-driven navigation**. The original inspiration was the
 [wp-dos](https://wordpress.org/themes/wp-dos/) WordPress theme — but that theme is a
 *DOS terminal* look (two colours, hairlines, zero animation, zero gradients), which is a
@@ -57,25 +57,41 @@ All colour and type live as custom properties on `:root` in `src/styles/global.c
 --line:     #3b1d6e;   /* hairline borders */
 --line-hot: #6b2fb5;   /* emphasised borders */
 
-/* neon */
---magenta: #ff2e97;    /* primary accent — h1, brand, hover */
---pink:    #ff6ec7;    /* softer magenta — emphasis, blockquote text */
---cyan:    #00e5ff;    /* secondary accent — links, h2, dates, focus ring */
---purple:  #b06fff;    /* tertiary — h3, indices, endcap */
---yellow:  #ffd93d;    /* code literals, kbd glyphs */
---orange:  #ff6b35;    /* sunset midpoint only */
+/* neon — ARTWORK ONLY. Never body text. */
+--neon-magenta: #ff2e97;   /* sun gradient, grid lines, header/footer edge */
+--neon-cyan:    #00e5ff;   /* grid lines, header/footer edge */
+--orange:       #ff6b35;   /* sunset midpoint only */
+--yellow:       #ffd93d;   /* code literals, kbd glyphs */
+
+/* muted — TEXT roles. Contrast-checked against --bg and --void. */
+--blue:      #4a86c8;  /* links, h2, dates, focus ring      5.2:1 */
+--blue-soft: #6fa3dc;  /* hover / raised                    7.4:1 */
+--rose:      #d9628f;  /* h1, brand, markers, accents       5.7:1 */
+--pink:      #e08cb4;  /* emphasis, blockquote text         7.6:1 */
+--purple:    #9b82cf;  /* h3, indices, structure            6.1:1 */
 
 /* text */
 --text: #e8dcff;       /* body */
 --dim:  #9d82c9;       /* secondary text, captions */
 ```
 
-**Colour roles, so the palette stays legible rather than just loud:**
+### The one rule that matters: neon is artwork, muted is text
 
-- **Magenta = identity.** The brand, `h1`, hover states. Loud, used sparingly.
-- **Cyan = interaction.** Links, focus rings, dates, the CTA. If it's cyan, you can act on it.
+The site reads as synthwave because the **sun, grid, and edge gradients** are full-
+saturation neon. It stays *readable* because **nothing you have to read is**. Text uses
+the muted ramp. Keep this split — if a `--neon-*` token ever ends up on a paragraph,
+heading, or link, that's the bug.
+
+**Colour roles:**
+
+- **Rose = identity.** Brand, `h1`, list markers, hover. The muted descendant of magenta.
+- **Blue = interaction.** Links, focus rings, dates, the CTA. If it's blue, you can act on it.
 - **Purple = structure.** Hierarchy markers, indices, dividers. Recedes.
 - **Yellow = literal values.** Code and keycaps only. Never decorative.
+
+**Every muted colour above was contrast-checked at authoring time** against both `--bg`
+and `--void`, and all clear 4.5:1 (WCAG AA body text). Re-run that check before changing
+one — the ratios are in the comments so a regression is visible in review.
 
 Two composite tokens do the heavy lifting:
 
@@ -115,9 +131,54 @@ Rules:
 - **Headings carry terminal prefixes**, added with CSS, not markup:
   `h2::before, h3::before { content: '// '; opacity: 0.55 }`. The blog index title uses
   `h1::before { content: '$ ' }` so it reads as a shell prompt.
+- **The hero wordmark is the exception to uppercase.** `oooops.dev` is a domain, and
+  `text-transform: lowercase` is set locally on `.hero-copy h1` to beat the global rule.
+  `SITE_NAME` (bare domain) and `SITE_TITLE` (`oooops.dev//stdout`, used in the header and
+  `<title>`) are separate constants in `src/consts.ts` for this reason.
 - **Fluid sizing on the big two** via `clamp()` — the hero `h1` is
   `clamp(1.8rem, 6vw, 3.4rem)`, the post title `clamp(1.6rem, 5vw, 2.6rem)`. Long
   monospace headlines overflow narrow screens otherwise.
+
+### Vertical rhythm
+
+One rule governs spacing: **every block-level element carries its gap below it, and
+headings carry a gap above.** The paragraph gap (`1.6em` inside `.prose`) is the unit;
+everything else matches it.
+
+```css
+/* every block gets the same bottom gap — no UA-default fallbacks */
+pre, table, ul, ol, figure { margin: 0 0 1.6em 0; }
+
+/* headings own the space above them, in rem so levels stay proportionate */
+h1 { margin-top: 3rem; }  h2 { margin-top: 2.75rem; }
+h3 { margin-top: 2.25rem; } h4, h5, h6 { margin-top: 1.75rem; }
+
+/* a heading under a heading is a subtitle, not a new section */
+:is(h1,h2,h3,h4,h5,h6) + :is(h1,h2,h3,h4,h5,h6) { margin-top: 1.1rem; }
+
+/* nothing pushes the top of an article down */
+.prose > :first-child, main > :first-child { margin-top: 0; }
+
+/* trailing margin inside a bordered box is dead space */
+.prose blockquote > :last-child, .prose li > :last-child { margin-bottom: 0; }
+```
+
+Why it is shaped this way:
+
+- **Top margins are `rem`, not `em`.** An `em` top margin scales with the heading's own
+  font-size, so an `h1` gap ends up three times an `h4` gap and the page loses its beat.
+- **Headings own their top gap, blocks own their bottom gap.** Mixing the two
+  responsibilities is how you get double gaps in one place and none in another.
+- **Never rely on UA defaults.** `pre`, `ul`, and `ol` silently inherited the browser's
+  `1em`, which didn't match the `1.6em` used everywhere else; `table` had *no* margin at
+  all, which is why tables ran flush into the next heading.
+
+**A component heading outside the prose flow must pin its own margin.** `.hero-copy h1`
+and `.help-panel h2` both set `margin-top: 0`, because they are the first thing in their
+own box and the global heading margin would otherwise push them down. Any new component
+with a heading in a box needs the same line.
+
+---
 
 ---
 
@@ -162,8 +223,8 @@ Three principles here, all reusable:
 
 ```css
 .sun {
-  position: absolute; top: 30%;
-  width: min(30rem, 80vw); aspect-ratio: 1; border-radius: 50%;
+  position: absolute; top: 26%;
+  width: min(25rem, 72vw); aspect-ratio: 1; border-radius: 50%;
   background: var(--sunset);
   filter: blur(0.5px);
   box-shadow: 0 0 90px rgba(255, 46, 151, 0.55);
@@ -178,7 +239,7 @@ Three principles here, all reusable:
 ```
 
 - `aspect-ratio: 1` + `border-radius: 50%` gives a perfect circle at any width, so
-  `min(30rem, 80vw)` is the only size knob.
+  `min(25rem, 72vw)` is the only size knob.
 - The classic retro-sun banding is **not** a mask — it's a child painted in the page
   background colour, covering the bottom 55% (`inset: 45% 0 0 0`). The stop list uses
   **irregular, widening intervals** (6/4, 8/8, 6/12) rather than even stripes, which is
@@ -192,7 +253,7 @@ Three principles here, all reusable:
   position: absolute; inset: auto 0 0 0; height: 45%;
   overflow: hidden; pointer-events: none;
   perspective: 260px; perspective-origin: 50% 0%;
-  mask-image: linear-gradient(180deg, transparent, #000 35%);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.35) 30%, #000 70%);
 }
 .grid-floor::before {
   content: ''; position: absolute; inset: -20% -60% -60% -60%;
@@ -214,7 +275,11 @@ context**. Notes:
   convergence is the entire look. Larger values flatten it out.
 - `inset: -20% -60% -60% -60%` oversizes the plane well past its container, because
   rotating it pulls the far edge inward and would otherwise expose a bare corner.
-- The `mask-image` fade stops the horizon line from ending in a hard seam.
+- The `mask-image` fade stops the horizon from ending in a hard seam. It is a **three-stop**
+  fade (0% / 30% / 70%) rather than a simple two-stop one: at the vanishing point the
+  gridlines converge into what renders as a solid bright bar, and a fast fade leaves that
+  bar visible. This showed up the moment the hero was shortened — a shorter container
+  compresses the convergence zone, so if you change the hero height, re-check the horizon.
 - Motion is **`background-position`, not `transform`** — animating the gradient's
   position slides the lines along the already-transformed plane, so they appear to travel
   toward the viewer. Animating `transform` would move the whole plane instead.
@@ -223,22 +288,23 @@ context**. Notes:
 ### 5.5 Neon glow — layered text-shadow, tight then wide
 
 ```css
---glow-cyan:    0 0 4px rgba(0,229,255,0.7),  0 0 18px rgba(0,229,255,0.35);
---glow-magenta: 0 0 4px rgba(255,46,151,0.7), 0 0 18px rgba(255,46,151,0.35);
+--glow-blue: 0 0 3px rgba(74, 134, 200, 0.45), 0 0 14px rgba(74, 134, 200, 0.22);
+--glow-rose: 0 0 3px rgba(217, 98, 143, 0.45), 0 0 14px rgba(217, 98, 143, 0.22);
 ```
 
-Always **two shadows**: a tight bright one (4px) that reads as the tube itself, and a
-wide dim one (18px) that reads as light bleeding into the air. One shadow alone looks
-like a blur artifact.
+Always **two shadows**: a tight one (3px) that reads as the tube itself, and a wide dim
+one (14px) that reads as light bleeding into the air. One shadow alone looks like a blur
+artifact. Alpha is deliberately low (0.45 / 0.22) — a muted colour with a neon-strength
+glow reads as blurry rather than lit.
 
 The hero `h1` adds **chromatic aberration** on top — solid ±2px offsets in cyan and
 magenta with no blur, mimicking a misconverged CRT:
 
 ```css
 text-shadow:
-  0 0 8px rgba(255,46,151,0.9), 0 0 30px rgba(255,46,151,0.5),
-   2px 0 0 rgba(0,229,255,0.55),
-  -2px 0 0 rgba(255,46,151,0.55);
+  0 0 10px rgba(217, 98, 143, 0.55), 0 0 34px rgba(217, 98, 143, 0.3),
+   1.5px 0 0 rgba(74, 134, 200, 0.4),
+  -1.5px 0 0 rgba(217, 98, 143, 0.4);
 ```
 
 ### 5.6 Legibility over bright artwork — the scrim
@@ -328,16 +394,35 @@ What this buys, for free:
 `data-knav` goes on **content** — post rows, the CTA, in-body links. It is deliberately
 **absent from the header and footer**. An early version marked the nav and social icons
 too, and six `j` presses on the blog index landed on the Twitter icon instead of a post.
-Site sections are reachable by `g`-chords and by Tab; `j`/`k` mean "next item of what
-this page is about".
+Site sections are reachable by the single-key routes and by Tab; `j`/`k` mean "next item
+of what this page is about".
 
 **When adding a new list page, add `data-knav` to its row anchors and nothing else.**
 
-### Chords with a timeout
+### Single-key routes, not chords
 
-`g` sets `awaitingGoto = true` and starts a 900 ms timer. The next keydown consults a
-route map and clears the flag either way, so a stray `g` expires instead of arming
-forever.
+Navigation is one keypress: `h` home, `b` blog, `a` about, from a plain lookup table.
+
+```js
+const ROUTES = { h: '/', b: '/blog', a: '/about' };
+// ...after the typing and modifier guards:
+const dest = ROUTES[event.key];
+if (dest) { event.preventDefault(); window.location.href = dest; return; }
+```
+
+This started as vim-style `g`-chords (`g h`, `g b`) with a 900 ms timeout, and was
+**deliberately flattened** — on a site with three destinations the prefix bought nothing
+but a second keystroke and a timer to reason about.
+
+Bare letters are safe here **only because of the two guards above them**: the handler
+returns early on text input and on any modifier combo, so `h`/`b`/`a` can never shadow
+typing or a browser shortcut. That is load-bearing, not incidental — **if you add a
+binding, keep both guards**, and if the site ever grows a text input outside a form
+control, re-check `isTyping`.
+
+Adding a destination means one entry in `ROUTES`, one row in the help overlay, one
+`<kbd>` in the status bar, and one `.hint` in `Header.astro`. Keep the letter distinct
+from `j`/`k`.
 
 ### Don't hijack typing
 
@@ -347,7 +432,45 @@ are untouched. **Any new binding must keep both guards.**
 
 ---
 
-## 7. Accessibility rules — non-negotiable
+## 7. Pixel-art icons — `src/components/PixelIcon.astro`
+
+Social icons are **hand-drawn 12x12 grids, not an icon library**. Each glyph is a literal
+picture in the source:
+
+```js
+linkedin: [
+  '............',
+  '.##.........',
+  '.##.........',
+  '............',
+  '.##..######.',
+  '.##..##..##.',
+  ...
+]
+```
+
+Why this shape:
+
+- **Editable by anyone.** Changing the art means changing `#` and `.` in a text file. No
+  vector tool, no export step, no binary in the repo.
+- **No licence surface.** These are original drawings, so there is no attribution or
+  redistribution question the way there would be with a downloaded icon set.
+- **Cheap.** Adjacent filled pixels in a row are merged into a single `<rect>` in the
+  component's frontmatter, so a glyph is ~10 nodes, not 144. It renders at build time.
+- `shape-rendering="crispEdges"` disables antialiasing — mandatory, or the pixels blur
+  into mush at small sizes.
+- `fill="currentColor"` means the icons inherit hover and focus colour from the link.
+
+**12x12 is a deliberate ceiling.** At the ~22px render size, a larger grid stops reading
+as pixel art. It also means glyphs are *impressionistic* — the GitHub mark is a cat face,
+not the Octocat. Judge a new icon by zooming to the real render size, not by the grid.
+
+To add one: add a grid to `GRIDS`, then add an entry to `SOCIALS` in `src/consts.ts`.
+Header and footer both render from that array, so one edit updates both.
+
+---
+
+## 8. Accessibility rules — non-negotiable
 
 - **Focus is always visible.** Global `:focus-visible { outline: 2px solid var(--cyan);
   outline-offset: 3px }`. Components may replace it with something louder; nothing may
@@ -371,7 +494,7 @@ are untouched. **Any new binding must keep both guards.**
 
 ---
 
-## 8. Gotchas already hit — don't reintroduce these
+## 9. Gotchas already hit — don't reintroduce these
 
 1. **`[hidden]` loses to a class rule.** `.help { display: grid }` overrides the UA
    `[hidden] { display: none }`, so the help overlay rendered on load. Any component with
@@ -386,15 +509,24 @@ are untouched. **Any new binding must keep both guards.**
 4. **Never animate `border-width` or layout properties on hover.** Use `box-shadow` and
    `transform` (see §5.7).
 5. **Full-viewport overlays need `pointer-events: none`** unless they are modal.
+6. **`.prose p` ties with `blockquote > :last-child` on specificity** (0,1,1 each) and
+   wins on source order, so the "kill the trailing margin" rule had to be written as
+   `.prose blockquote > :last-child` to take effect. When a reset rule silently does
+   nothing, count specificity before assuming the selector is wrong.
+7. **Headings shipped with `margin-top: 0`** for a while, which made every heading collide
+   with the block above it — most visibly tables, which have no UA margin to fall back on.
+   Fixed by the rhythm block in §4; don't reintroduce a bare `margin: 0 0 X 0` on headings.
 
 ---
 
-## 9. Where things live
+## 10. Where things live
 
 | Path | Holds |
 |---|---|
 | `src/styles/global.css` | tokens, base typography, prose, scanlines, `.grid-floor`, reduced-motion |
 | `src/components/KeyboardNav.astro` | status bar, help overlay, the entire site script |
+| `src/components/PixelIcon.astro` | 12x12 pixel-art glyph grids + run-length renderer |
+| `src/consts.ts` | `SITE_TITLE`, `SITE_NAME`, `SOCIALS` |
 | `src/components/Header.astro` | sticky header, gradient underline, `[bracket]` nav hover |
 | `src/components/BaseHead.astro` | font preload, `color-scheme: dark`, `theme-color` |
 | `src/pages/index.astro` | hero — sun, grid, scrim, CTA |
@@ -409,11 +541,12 @@ Reach for `:global()` only to style a child component's markup (as `Header.astro
 
 ---
 
-## 10. Not done yet
+## 11. Not done yet
 
 - **Sprites / pixel art** — deferred by choice. The palette and grid are the backdrop for
   them when they land.
-- Header and footer social links still point at **Astro's** accounts.
+- **`SOCIALS` hrefs are placeholders** (`https://github.com/`, `https://www.linkedin.com/`)
+  — they need real profile URLs. Mastodon was deliberately dropped.
 - `site: 'https://example.com'` in `astro.config.mjs` — this feeds RSS and sitemap URLs.
 - `src/assets/fonts/atkinson-*.woff` are **orphaned**; nothing references them since the
   switch to JetBrains Mono.
