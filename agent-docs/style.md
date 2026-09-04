@@ -536,6 +536,24 @@ not the Octocat. Judge a new icon by zooming to the real render size, not by the
 To add one: add a grid to `GRIDS`, then add an entry to `SOCIALS` in `src/consts.ts`.
 Header and footer both render from that array, so one edit updates both.
 
+### The favicon — same technique, 16x16
+
+`public/favicon.svg` is a pixel thought bubble drawn on the same kind of grid, generated
+by `scripts/build-favicon.py`. It writes **both** icons from one picture: the SVG (runs
+merged into 14 `<rect>`s, with the grid preserved in an XML comment so it stays editable)
+and `favicon.ico`, which packs a 16x16 and a 32x32 PNG for browsers that still ask for
+`.ico`. Re-run the script after editing the grid, or the two will disagree.
+
+- **16x16, one grid cell per CSS pixel** at tab size. Rasterising a circle at this size
+  leaves stray pixels and lopsided edges; the dome is drawn by hand, row by row, wide in
+  the middle (rows 4-5 span all 16 cells) and two cells tall at the far left and right.
+- **The trail dots carry the meaning.** A blob alone is a blob; a blob with two shrinking
+  dots on a diagonal is a thought bubble. Keep them square, and keep the gaps.
+- **Magenta bubble, purple trail** — `--neon-magenta` to `--purple`, the first pair in
+  `HeroArt`'s palette table (§8). A favicon is artwork, so neon is correct here.
+- **Empty cells are transparent**, not painted with `--bg`, so the icon sits on a light
+  or dark tab strip equally well. Check both before changing it.
+
 ---
 
 ## 8. Generated hero art — `src/components/HeroArt.astro`
@@ -662,6 +680,7 @@ the text**. Same principle as §5.6 — decoration never outranks reading.
 | `src/styles/global.css` | tokens, base typography, prose, scanlines, `.grid-floor`, reduced-motion |
 | `src/components/KeyboardNav.astro` | status bar, help overlay, the entire site script |
 | `src/components/PixelIcon.astro` | 12x12 pixel-art glyph grids + run-length renderer |
+| `scripts/build-favicon.py` | draws `public/favicon.svg` + `favicon.ico` from one 16x16 grid |
 | `src/components/HeroArt.astro` | seeded generative hero artwork (5 motifs, 6 palettes) |
 | `src/consts.ts` | `SITE_TITLE`, `SITE_NAME`, `SOCIALS` |
 | `src/components/Header.astro` | sticky header, gradient underline, `[bracket]` nav hover |
