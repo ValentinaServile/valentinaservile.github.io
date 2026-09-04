@@ -8,7 +8,7 @@ categories: ['Networking', 'Snippets', 'Unix']
 
 If you are using SSH between Unix-like operating systems, you can also forward GUI applications over SSH. This is especially useful if your server doesn’t really have a user interface, but you need to check something on the fly with a web browser running on it.
 
-![Descarga Navegador Firefox — Rápido, privado y gratis — de Mozilla](../../assets/blog/ssh-x11-forwarding/screen.19f69ea7f0ea.png)
+![Descarga Navegador Firefox — Rápido, privado y gratis — de Mozilla](../../assets/blog/ssh-x11-forwarding/screen.19f69ea7f0ea.asis.png)
 
 This is possible because all Unix-like systems share a common GUI windowing system called X11, which is what provides the basic framework for the desktop environment: drawing and moving windows on the display device and interacting with a mouse and keyboard, etc.
 

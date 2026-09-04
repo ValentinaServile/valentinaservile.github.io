@@ -22,6 +22,7 @@ const {
 	categories = [],
 	tags = [],
 	seed,
+	invertImages = true,
 } = Astro.props;
 ---
 
@@ -33,7 +34,7 @@ const {
 	<body>
 		<Header />
 		<main>
-			<article>
+			<article class:list={{ 'invert-images': invertImages }}>
 				{
 					heroImage && (
 						<div class="hero-image">

@@ -15,6 +15,7 @@ const { frontmatter } = Astro.props;
 	description={frontmatter.description}
 	pubDate={new Date(frontmatter.pubDate)}
 	updatedDate={frontmatter.updatedDate ? new Date(frontmatter.updatedDate) : undefined}
+	invertImages={frontmatter.invertImages !== false}
 >
 	<slot />
 </BlogPost>

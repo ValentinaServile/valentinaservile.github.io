@@ -4,12 +4,14 @@ description: 'I’m a web-oriented full stack software developer and wannabe sof
 pubDate: '2021-01-16'
 updatedDate: '2022-09-30'
 layout: '../layouts/MarkdownPage.astro'
+# photograph, not a diagram — must not be inverted
+invertImages: false
 ---
 
 Valentina Servile  
 Lead Software Developer @ ThoughtWorks
 
-![](../assets/blog/about/17917158_1839067983082929_5481433849600420817_o.jpg)
+![](../assets/blog/about/17917158_1839067983082929_5481433849600420817_o.asis.jpg)
 
 ## Hi – this is my blog
 

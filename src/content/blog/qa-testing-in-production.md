@@ -105,7 +105,7 @@ Manually verifying a feature works as intended should be the first step before d
 
 Some feature toggle mechanisms offer overriding the toggle state based on the HTTP request having a certain header. You can install extensions like [ModHeaders](https://chrome.google.com/webstore/detail/modheader/idgpnmonknjnojddfkpgkljpfnnfcklj?hl=en) to make sure your browser is sending it.
 
-![the modheaders extension interface](../../assets/blog/qa-testing-in-production/O-aV9t_3Rl8C1q8U39MbvnfeqCOpVu_IftL3BzeN0a7BCoClsTUBWS8ppeWGMPiqfNSEOkrZ_QVAbB0B4Bq7__rf0JE83bJaKZrHZSu4j_1FP9zOhR6-VxavkAUGzgNWhHdl3szFYIJm2gOoLAdwAq0.png)
+![the modheaders extension interface](../../assets/blog/qa-testing-in-production/O-aV9t_3Rl8C1q8U39MbvnfeqCOpVu_IftL3BzeN0a7BCoClsTUBWS8ppeWGMPiqfNSEOkrZ_QVAbB0B4Bq7__rf0JE83bJaKZrHZSu4j_1FP9zOhR6-VxavkAUGzgNWhHdl3szFYIJm2gOoLAdwAq0.asis.png)
 
 If your application is not browser based, you can edit headers very easily with tools like Postman or curl. This approach works well with APIs and other HTTP based applications.
 
@@ -113,7 +113,7 @@ If your application is not browser based, you can edit headers very easily with 
 
 You can also leverage cookies for the same purpose. Your framework might allow overriding a toggle only when a certain cookie is present, which can be edited directly from most browsers.
 
-![](../../assets/blog/qa-testing-in-production/AYtRVsmjevz_oJFX1Yonm6BUa8OJYdp_P3qTpWh4Jt5to9twFpK9DH8c2-XSW45tVQhNlEg9kgwsOYxgQ6gqAca_r9gXce28pvt0QnN5-o0loCzoTo0AYgZR8irmTse_TIn3j3rZhAzPM4zM0WGdT1g.png)
+![](../../assets/blog/qa-testing-in-production/AYtRVsmjevz_oJFX1Yonm6BUa8OJYdp_P3qTpWh4Jt5to9twFpK9DH8c2-XSW45tVQhNlEg9kgwsOYxgQ6gqAca_r9gXce28pvt0QnN5-o0loCzoTo0AYgZR8irmTse_TIn3j3rZhAzPM4zM0WGdT1g.asis.png)
 
 This works best with browser based applications. However some care must be taken to remember that cookies will be persisted across website visits.
 

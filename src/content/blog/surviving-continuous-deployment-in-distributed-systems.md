@@ -73,7 +73,7 @@ We shall call it the “Animal Shelter Management System”, and it does exactly
 
 It even has a fancy, modern UI:
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/KgrZwvGZUpAgNfZlkrJU1GyTprlLl8hbvyjtuEQw_zrZW5XK6PGXD-Y2awTxFAC7RQArbYY69J6nC1sPodMeUENAzTlWvYCtOcsC92dTIB26EegswIpX7SCmmeW9ShUhYPN01snL8H8.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/KgrZwvGZUpAgNfZlkrJU1GyTprlLl8hbvyjtuEQw_zrZW5XK6PGXD-Y2awTxFAC7RQArbYY69J6nC1sPodMeUENAzTlWvYCtOcsC92dTIB26EegswIpX7SCmmeW9ShUhYPN01snL8H8.asis.png)
 
 We will assume that this application is web-based and has a simple, idealized architecture, which might look very familiar to most developers. It has some sort of persistence – a relational database for our example – and a backend that acts as an API to a one-page application frontend. Also, we will assume the API collaborate with third-party systems to read or provide some data.
 
@@ -172,7 +172,7 @@ Let’s begin with our first example. Imagine we have the following user story i
 
 This implies adding a reminder section to our interface, with a navigation option to access it and an “add reminder” button.
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-11.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-11.asis.png)
 
 ## Target state
 
@@ -464,7 +464,7 @@ Imagine that one of our developers stumbles upon this fascinating article on Twi
 So they learn that it is very dangerous to represent currency as a float – much better to use the full value up to the cents as an integer, and then format it for the user later.  
 But suddenly they remember a certain feature in the Animal Shelter Management System… _uh oh_!
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-18.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-18.asis.png)
 
 This is a feature that allows the shelter volunteers to record an expense for the animal’s food so they can keep track of their costs. It looks like a prime candidate for the Money Mistake™.
 
@@ -1029,7 +1029,7 @@ However, just because two changes live in the same repo doesn’t mean that they
 
 If the database evolutions are applied first, for example, our application will still attempt to save the old format in the database until the new version of it is deployed. This will lead to a brief period of failed requests, and data loss.  
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-24.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-24.asis.png)
 
 The same is true when the deployments happen in the opposite order. Therefore, we can conclude that we should isolate changes belonging to different distributed components in separate releases, even though their codebases might be versioned together.
 
@@ -1043,7 +1043,7 @@ It might also be tempting to simply try and apply the expand and contract patter
 
 However, this will also cause a data loss: nothing is being written to the new column between the expand and contract phases.
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-25.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-25.asis.png)
 
 As we can see in the picture, there will be a gap in our new column in between the phases. The application will start using it and potentially return empty results or exceptions when retrieving data from that time window.
 
@@ -1228,7 +1228,7 @@ Let’s imagine the following user story for our last example:
 
 Which would require adding a “type” dropdown in our well-known expense functionality.
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-27.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-27.asis.png)
 
 It definitely requires changing the shape of something existing: expenses will now have a type (the existing ones could have a default of “food”). But also it is a new functionality as it allows the user to specify _which type_, and there is definitely a visual change there that might need to be hidden.  
 So which approach do we choose here? In which direction do we start?

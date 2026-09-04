@@ -127,6 +127,6 @@ But instead we will be connecting to “localhost” or 127.0.0.1, and according
 
 After you’ve selected all your favourite options, if you start seeing some output like the following
 
-![](../../assets/blog/how-to-attach-a-remote-profiler-to-a-jvm-running-in-ec2-and-maybe-docker/image-32.png)
+![](../../assets/blog/how-to-attach-a-remote-profiler-to-a-jvm-running-in-ec2-and-maybe-docker/image-32.asis.png)
 
 then it means everything has worked, and you can finally start poking around your heap, threads and whatnot.

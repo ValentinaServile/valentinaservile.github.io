@@ -66,7 +66,9 @@ body::after {
 	position: fixed;
 	inset: 0;
 	pointer-events: none;
-	z-index: 9999;
+	/* Below the header (400), status bar (500) and help overlay (900) so those stay
+	   crisp, and low enough that content images can be lifted above the stripes. */
+	z-index: 300;
 	background: repeating-linear-gradient(
 		180deg,
 		rgba(0, 0, 0, 0.16) 0 1px,
@@ -306,6 +308,36 @@ button {
 }
 textarea {
 	width: 100%;
+}
+
+/* ---------- content images ---------- */
+
+/* Lift images above the scanline overlay (z-index 300) but below the sticky header
+   (400), so a scrolled image passes under the header rather than over it. */
+.prose img,
+.hero-image img {
+	position: relative;
+	z-index: 310;
+}
+
+/* Most images are light diagrams carried over from WordPress, which glare on a dark
+   page. Inverting fixes that; the hue-rotate puts hues back where plain inversion
+   would flip them (a blue box stays blue instead of turning orange).
+
+   Two opt-outs, because two different things need excluding:
+   - `.asis.` in the filename — a single image that must not be inverted, because it
+     is already dark (terminal captures, dark diagrams) or is a photo/screenshot.
+     Marked in the filename because basenames repeat across posts (`image-11.png`
+     exists in two posts, on opposite sides of the split), so a CSS selector on the
+     basename alone would hit the wrong one.
+   - `invertImages: false` in frontmatter — a whole page of such images. */
+.invert-images .prose img:not([src*='.asis.']),
+.invert-images .hero-image img:not([src*='.asis.']) {
+	filter: invert(1) hue-rotate(180deg);
+	/* After inverting, a white diagram background becomes solid black, which reads as
+	   a hard black box on the purple page. `screen` treats black as identity, so that
+	   background drops out and only the strokes remain — the diagram floats. */
+	mix-blend-mode: screen;
 }
 
 /* ---------- focus / keyboard ---------- */

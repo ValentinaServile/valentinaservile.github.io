@@ -18,6 +18,10 @@ const blog = defineCollection({
 			// taxonomy there (every post has one); tags are sparse.
 			categories: z.array(z.string()).default([]),
 			tags: z.array(z.string()).default([]),
+			// Set false on a post whose images must not be dark-mode inverted.
+			// Must be declared here: Zod strips unknown frontmatter keys, so without
+			// this the flag would be silently dropped and the default would win.
+			invertImages: z.boolean().default(true),
 		}),
 });
 

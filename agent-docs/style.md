@@ -352,6 +352,56 @@ share **one identical rule** so pointer and keyboard users see the same thing:
 - Suppressing `outline` here is only acceptable **because the rule replaces it** with a
   louder border + glow + bar. Never suppress focus styling without a replacement.
 
+### 5.8 Content images — scanlines and inversion
+
+Two problems, both from the WordPress migration: the CRT scanline overlay striped every
+image, and the images are light diagrams that glared on a dark page.
+
+**Scanlines.** `body::after` sat at `z-index: 9999`, above literally everything. It is now
+at **300** — below the header (400), status bar (500) and help overlay (900) — and content
+images are lifted to **310**. So images sit above the stripes but still pass *under* the
+sticky header when scrolled. Changing either number without the other reintroduces the
+stripes or puts images over the header.
+
+**Inversion.**
+
+```css
+.invert-images .prose img:not([src*='.asis.']) {
+  filter: invert(1) hue-rotate(180deg);
+  mix-blend-mode: screen;
+}
+```
+
+- `hue-rotate(180deg)` after the invert puts hues back: without it a blue box turns
+  orange. With it, coloured diagram fills survive inversion looking like themselves.
+- `mix-blend-mode: screen` is what stops an inverted diagram reading as a hard black
+  rectangle. Inversion turns a white background solid black, and `screen` treats black as
+  identity — so that background drops out and the diagram floats on the page.
+
+**What must NOT be inverted, and how it is decided.** Images were classified by mean
+luminance (sharp, downsampled to 64px). There is a clean natural gap in the data: ten
+images sit at luminance <= 0.47, then nothing until 0.73. Those ten are already-dark
+diagrams, terminal captures, a browser screenshot and one photograph — inverting them
+would make them *worse*, turning dark images into glaring white boxes. The other 68
+(~87%) are light diagrams that invert well.
+
+The rule is therefore **"is it light?"**, not "is it a diagram".
+
+Two opt-outs exist because two different scopes need it:
+
+- **`.asis.` in the filename** excludes a single image. It is encoded in the filename
+  rather than a CSS selector on the basename because **basenames repeat across posts** —
+  `image-11.png` and `image-27.png` each exist in two posts, on opposite sides of the
+  split. Astro preserves the basename through hashing (`image-11.asis.<hash>.webp`), so
+  the attribute selector is stable.
+- **`invertImages: false`** in frontmatter excludes a whole post or page (set on
+  `about.md`). It is declared in `src/content.config.ts` as well — **Zod strips unknown
+  frontmatter keys**, so without the schema entry the flag is silently dropped on blog
+  posts and the default (`true`) wins. Any new frontmatter flag needs the same.
+
+To re-classify after adding images, re-run the luminance measurement and rename anything
+below the threshold to `*.asis.*`.
+
 ---
 
 ## 6. JavaScript principles — `src/components/KeyboardNav.astro`
@@ -576,7 +626,12 @@ the text**. Same principle as §5.6 — decoration never outranks reading.
    wins on source order, so the "kill the trailing margin" rule had to be written as
    `.prose blockquote > :last-child` to take effect. When a reset rule silently does
    nothing, count specificity before assuming the selector is wrong.
-7. **Headings shipped with `margin-top: 0`** for a while, which made every heading collide
+7. **Renaming assets by basename breaks sibling posts.** Marking the dark images
+   `*.asis.*` and updating references with a basename-keyed string replace rewrote refs in
+   three posts whose files had *not* been renamed, because `image-11.png` and
+   `image-27.png` exist in more than one post directory. Reference rewrites must be keyed
+   on the full path, and verified by resolving every ref against disk afterwards.
+8. **Headings shipped with `margin-top: 0`** for a while, which made every heading collide
    with the block above it — most visibly tables, which have no UA margin to fall back on.
    Fixed by the rhythm block in §4; don't reintroduce a bare `margin: 0 0 X 0` on headings.
 
