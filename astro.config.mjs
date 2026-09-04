@@ -3,15 +3,16 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig, fontProviders } from 'astro/config';
+import { wordpressRedirects } from './src/redirects.js';
 
 // https://astro.build/config
 export default defineConfig({
-	// Step 1: serve from the GitHub Pages default domain while WordPress keeps oooops.dev.
-	// Step 2 (DNS cutover): set this to 'https://oooops.dev' and restore public/CNAME
-	// containing the single line `oooops.dev`. No `base` is needed in either step, as long
-	// as the repo is named <user>.github.io — see agent-docs.
-	site: 'https://valentinaservile.github.io',
+	// Step 2 (DNS cutover). public/CNAME carries the same domain so GitHub Pages serves
+	// it. No `base` is needed: the repo is named <user>.github.io, so the site is served
+	// from the domain root either way.
+	site: 'https://oooops.dev',
 	integrations: [mdx(), sitemap()],
+	redirects: wordpressRedirects,
 	fonts: [
 		{
 			provider: fontProviders.google(),

@@ -50,7 +50,7 @@ Host server
 
 ### [Next: Multiplexing and Master Mode →](/blog/ssh-multiplexing-and-master-mode/)
 
-#### [← Previous: Tunnelling and Port Forwarding](/blog/jumping-ssh-hosts/)
+#### [← Previous: Tunnelling and Port Forwarding](/blog/ssh-tunnelling-and-port-forwarding/)
 
 ### Table of Contents:
 

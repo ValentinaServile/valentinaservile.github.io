@@ -49,7 +49,7 @@ See the [man page](https://man7.org/linux/man-pages/man1/ssh-agent.1.html) and 
 
 ### [Next: Config →](/blog/ssh-config/)
 
-#### [← Previous: Known Hosts](/blog/ssh-authentication-methods/)
+#### [← Previous: Known Hosts](/blog/ssh-known-hosts/)
 
 ### Table of Contents:
 

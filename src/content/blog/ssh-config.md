@@ -79,7 +79,7 @@ See the [man page](https://man7.org/linux/man-pages/man5/ssh_config.5.html) for 
 
 ### [Next: Jumping Hosts →](/blog/jumping-ssh-hosts/)
 
-#### [← Previous: SSH Agent](/blog/ssh-authentication-methods/)
+#### [← Previous: SSH Agent](/blog/ssh-agent/)
 
 ### Table of Contents:
 

@@ -202,7 +202,7 @@ More info on the [AWS documentation](https://docs.aws.amazon.com/systems-manager
 
 ### [Next: Tunnelling and Port Forwarding →](/blog/ssh-tunnelling-and-port-forwarding/)
 
-#### [← Previous: Config](/blog/ssh-authentication-methods/)
+#### [← Previous: Config](/blog/ssh-config/)
 
 ### Table of Contents:
 

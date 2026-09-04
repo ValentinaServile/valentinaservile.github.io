@@ -87,7 +87,7 @@ From the SSH documentation:
 
 > X11 and ssh-agent forwarding is supported over these multiplexed connections, however the display and agent forwarded will be the one belonging to the master connection i.e. it is not possible to forward multiple displays or agents.
 
-#### [← Previous: X11 Forwarding](/blog/jumping-ssh-hosts/)
+#### [← Previous: X11 Forwarding](/blog/ssh-x11-forwarding/)
 
 ### Table of Contents:
 
