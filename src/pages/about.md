@@ -1,6 +1,6 @@
 ---
 title: 'About'
-description: 'I’m a web-oriented full stack software developer and wannabe software craftsperson.'
+description: 'I’m a full stack software developer.'
 pubDate: '2021-01-16'
 updatedDate: '2026-09-04'
 layout: '../layouts/MarkdownPage.astro'
