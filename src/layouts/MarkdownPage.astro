@@ -1,0 +1,20 @@
+---
+/**
+ * Layout for standalone Markdown pages in `src/pages` (e.g. about.md).
+ *
+ * Markdown layouts receive their frontmatter under `Astro.props.frontmatter`
+ * rather than as direct props, so this adapts it to BlogPost's prop shape.
+ */
+import BlogPost from './BlogPost.astro';
+
+const { frontmatter } = Astro.props;
+---
+
+<BlogPost
+	title={frontmatter.title}
+	description={frontmatter.description}
+	pubDate={new Date(frontmatter.pubDate)}
+	updatedDate={frontmatter.updatedDate ? new Date(frontmatter.updatedDate) : undefined}
+>
+	<slot />
+</BlogPost>

@@ -1,0 +1,193 @@
+---
+/**
+ * Procedurally generated hero artwork, used when a post has no `heroImage`.
+ *
+ * Deterministic, not random: the look is derived from a hash of the post slug, so a
+ * given post always gets the same artwork across rebuilds and navigations. Truly
+ * random art would change on every build and make the site feel unstable.
+ *
+ * Pure CSS gradients — no images, no canvas, no JS — matching the rest of the site.
+ */
+
+interface Props {
+	seed: string;
+	/** Thumbnail variant: same art, pattern scaled down for a ~120x68 box. */
+	compact?: boolean;
+}
+
+const { seed, compact = false } = Astro.props;
+
+/** FNV-1a: small, dependency-free, and well spread for short strings like slugs. */
+function hash(str: string): number {
+	let h = 0x811c9dc5;
+	for (let i = 0; i < str.length; i++) {
+		h ^= str.charCodeAt(i);
+		h = Math.imul(h, 0x01000193);
+	}
+	return h >>> 0;
+}
+
+const rgba = (hex: string, a: number) => {
+	const n = parseInt(hex.slice(1), 16);
+	return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+};
+
+// Pairs drawn from the site palette, so generated art can never go off-brand.
+const PAIRS: [string, string][] = [
+	['#ff2e97', '#b06fff'], // magenta -> purple
+	['#00e5ff', '#4a86c8'], // cyan -> blue
+	['#b06fff', '#ff2e97'], // purple -> magenta
+	['#ff6b35', '#ff2e97'], // sunset
+	['#4a86c8', '#b06fff'], // blue -> purple
+	['#ffd93d', '#ff6b35'], // amber
+];
+
+const MOTIFS = ['grid', 'sun', 'rays', 'rings', 'bars'] as const;
+
+const h = hash(seed);
+const [c1, c2] = PAIRS[h % PAIRS.length];
+const motif = MOTIFS[(h >>> 3) % MOTIFS.length];
+const angle = 100 + ((h >>> 6) % 8) * 20; // 100deg .. 240deg
+const posX = 20 + ((h >>> 11) % 7) * 10; // 20% .. 80%
+
+const style = [
+	`--c1:${c1}`,
+	`--c2:${c2}`,
+	`--c1-soft:${rgba(c1, 0.7)}`,
+	`--c1-faint:${rgba(c1, 0.42)}`,
+	`--c2-soft:${rgba(c2, 0.62)}`,
+	`--c2-faint:${rgba(c2, 0.34)}`,
+	`--angle:${angle}deg`,
+	`--pos-x:${posX}%`,
+	// Motif geometry is authored for a ~360px band; --k scales every fixed length so
+	// the same seed yields the same picture at thumbnail size, not a coarse crop.
+	`--k:${compact ? 0.3 : 1}`,
+].join(';');
+---
+
+<div class="art" data-motif={motif} class:list={{ compact }} style={style} aria-hidden="true">
+	<div class="motif"></div>
+	<div class="scrim"></div>
+</div>
+
+<style>
+	.art {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		background:
+			radial-gradient(ellipse 70% 90% at var(--pos-x) 110%, var(--c1-faint), transparent 72%),
+			linear-gradient(var(--angle), #12042b 0%, #07010f 70%);
+	}
+
+	.motif {
+		position: absolute;
+		inset: 0;
+	}
+
+	/* text stays readable over every motif — decoration never outranks reading */
+	.scrim {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			180deg,
+			rgba(7, 1, 15, 0.3) 0%,
+			rgba(7, 1, 15, 0.55) 55%,
+			rgba(7, 1, 15, 0.86) 100%
+		);
+	}
+
+	.art.compact .scrim {
+		background: linear-gradient(180deg, rgba(7, 1, 15, 0.1) 0%, rgba(7, 1, 15, 0.45) 100%);
+	}
+
+	/* --- motifs --- */
+
+	/* perspective grid receding to a horizon */
+	[data-motif='grid'] .motif {
+		top: 35%;
+		perspective: calc(200px * var(--k));
+		perspective-origin: 50% 0%;
+	}
+	[data-motif='grid'] .motif::before {
+		content: '';
+		position: absolute;
+		inset: -20% -60% -80% -60%;
+		background-image:
+			repeating-linear-gradient(to right, var(--c1-soft) 0 1px, transparent 1px calc(56px * var(--k))),
+			repeating-linear-gradient(to bottom, var(--c2-soft) 0 1px, transparent 1px calc(56px * var(--k)));
+		transform: rotateX(76deg);
+		transform-origin: 50% 0%;
+	}
+
+	/* banded sun sinking at a seeded horizontal position */
+	[data-motif='sun'] .motif::before {
+		content: '';
+		position: absolute;
+		left: var(--pos-x);
+		bottom: -42%;
+		height: 165%;
+		width: auto;
+		aspect-ratio: 1;
+		transform: translateX(-50%);
+		border-radius: 50%;
+		background: linear-gradient(180deg, var(--c2) 0%, var(--c1) 100%);
+		opacity: 0.5;
+	}
+	[data-motif='sun'] .motif::after {
+		content: '';
+		position: absolute;
+		inset: 45% 0 0 0;
+		background: repeating-linear-gradient(
+			180deg,
+			transparent 0 calc(5px * var(--k)),
+			#07010f calc(5px * var(--k)) calc(9px * var(--k)),
+			transparent calc(9px * var(--k)) calc(16px * var(--k)),
+			#07010f calc(16px * var(--k)) calc(24px * var(--k))
+		);
+	}
+
+	/* diagonal light rays */
+	[data-motif='rays'] .motif::before {
+		content: '';
+		position: absolute;
+		inset: -30%;
+		background: repeating-linear-gradient(
+			var(--angle),
+			transparent 0 calc(26px * var(--k)),
+			var(--c1-faint) calc(26px * var(--k)) calc(30px * var(--k)),
+			transparent calc(30px * var(--k)) calc(54px * var(--k)),
+			var(--c2-faint) calc(54px * var(--k)) calc(56px * var(--k))
+		);
+	}
+
+	/* concentric rings radiating from a seeded origin */
+	[data-motif='rings'] .motif::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: repeating-radial-gradient(
+			circle at var(--pos-x) 120%,
+			transparent 0 calc(30px * var(--k)),
+			var(--c1-faint) calc(30px * var(--k)) calc(32px * var(--k)),
+			transparent calc(32px * var(--k)) calc(62px * var(--k)),
+			var(--c2-faint) calc(62px * var(--k)) calc(64px * var(--k))
+		);
+	}
+
+	/* equaliser bars along the base */
+	[data-motif='bars'] .motif::before {
+		content: '';
+		position: absolute;
+		inset: 40% 0 0 0;
+		background: repeating-linear-gradient(
+			90deg,
+			var(--c1-faint) 0 calc(14px * var(--k)),
+			transparent calc(14px * var(--k)) calc(22px * var(--k)),
+			var(--c2-faint) calc(22px * var(--k)) calc(30px * var(--k)),
+			transparent calc(30px * var(--k)) calc(46px * var(--k))
+		);
+		mask-image: linear-gradient(180deg, transparent, #000);
+		-webkit-mask-image: linear-gradient(180deg, transparent, #000);
+	}
+</style>

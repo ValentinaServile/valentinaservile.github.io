@@ -5,11 +5,24 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import HeroArt from '../components/HeroArt.astro';
 import KeyboardNav from '../components/KeyboardNav.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+// categories/tags default to [] — Markdown pages (about.md) don't supply them.
+// `seed` keys the generated hero art; falls back to the title when a caller
+// (e.g. MarkdownPage) has no slug to hand.
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	categories = [],
+	tags = [],
+	seed,
+} = Astro.props;
 ---
 
 <html lang="en">
@@ -28,7 +41,8 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						</div>
 					)
 				}
-				<div class="prose">
+				<header class:list={['titleband', { generated: !heroImage }]}>
+					{!heroImage && <HeroArt seed={seed ?? title} />}
 					<div class="title">
 						<p class="date">
 							<FormattedDate date={pubDate} />
@@ -42,7 +56,21 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						</p>
 						<h1>{title}</h1>
 						<p class="desc">{description}</p>
+						{
+							(categories.length > 0 || tags.length > 0) && (
+								<ul class="taxonomy">
+									{categories.map((c) => (
+										<li class="cat">{c}</li>
+									))}
+									{tags.map((t) => (
+										<li class="tag">#{t}</li>
+									))}
+								</ul>
+							)
+						}
 					</div>
+				</header>
+				<div class="prose">
 					<slot />
 					<div class="endcap">
 						<span>EOF</span>
@@ -89,10 +117,67 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		padding: 1em;
 	}
 
-	.title {
-		margin: 2.5em 0 2.5em;
+	/* ---------- title band ---------- */
+
+	.titleband {
+		position: relative;
+	}
+	.titleband .title {
+		position: relative;
+		z-index: 1;
+		width: 760px;
+		max-width: calc(100% - 2em);
+		margin: auto;
+		padding: 0 1em;
+	}
+
+	/* plain variant: no artwork, keep the original rule */
+	.titleband:not(.generated) .title {
+		margin: 2.5em auto;
 		padding-bottom: 1.5em;
 		border-bottom: 1px solid var(--line);
+	}
+
+	/* generated variant: text sits on the artwork, anchored to the bottom */
+	.titleband.generated {
+		display: flex;
+		align-items: flex-end;
+		min-height: clamp(240px, 30vw, 360px);
+		margin-bottom: 3.5rem;
+		border-bottom: 1px solid var(--line-hot);
+		box-shadow: 0 1px 24px rgba(255, 46, 151, 0.18);
+	}
+	.titleband.generated .title {
+		padding-top: 3.5em;
+		padding-bottom: 2.2em;
+	}
+	/* Text-local scrim. The band-wide scrim can't be dark enough to tame a bright
+	   motif (the sun) without flattening a faint one (rings), so the text carries
+	   its own. Style-doc rule: decoration never outranks reading. */
+	.titleband.generated .title::before {
+		content: '';
+		position: absolute;
+		inset: 0.5em -1.5em 0 -1.5em;
+		z-index: -1;
+		background: linear-gradient(
+			180deg,
+			transparent 0%,
+			rgba(7, 1, 15, 0.72) 22%,
+			rgba(7, 1, 15, 0.85) 70%,
+			rgba(7, 1, 15, 0.8) 100%
+		);
+	}
+	.titleband.generated h1 {
+		text-shadow:
+			0 2px 10px rgba(7, 1, 15, 0.9),
+			0 0 30px rgba(7, 1, 15, 0.7);
+	}
+	.titleband.generated .desc {
+		color: var(--text);
+		text-shadow: 0 1px 8px rgba(7, 1, 15, 0.95);
+	}
+	.titleband.generated .date {
+		text-shadow: 0 1px 8px rgba(7, 1, 15, 0.95);
 	}
 	.title h1 {
 		margin: 0.2em 0 0.4em;
@@ -114,6 +199,34 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		margin: 0;
 		color: var(--dim);
 		font-size: 0.95rem;
+	}
+
+	.taxonomy {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4em 0.5em;
+		list-style: none;
+		margin: 1.2em 0 0 0;
+		padding: 0;
+		font-size: 0.75rem;
+	}
+	.taxonomy li {
+		margin: 0;
+		padding: 0.1em 0.6em;
+		border: 1px solid var(--line);
+		border-radius: 2px;
+		letter-spacing: 0.04em;
+	}
+	.taxonomy li::marker {
+		content: none;
+	}
+	.cat {
+		color: var(--rose);
+		border-color: rgba(217, 98, 143, 0.4);
+		text-transform: uppercase;
+	}
+	.tag {
+		color: var(--dim);
 	}
 
 	.endcap {

@@ -14,6 +14,10 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			// Preserved from the WordPress migration. Categories were the better-kept
+			// taxonomy there (every post has one); tags are sparse.
+			categories: z.array(z.string()).default([]),
+			tags: z.array(z.string()).default([]),
 		}),
 });
 

@@ -470,7 +470,70 @@ Header and footer both render from that array, so one edit updates both.
 
 ---
 
-## 8. Accessibility rules — non-negotiable
+## 8. Generated hero art — `src/components/HeroArt.astro`
+
+No migrated post has a `heroImage` (WordPress had no featured images), so posts without
+one get procedurally generated artwork with the title overlaid on it.
+
+**It is deterministic, not random.** The look is derived from an FNV-1a hash of the post
+slug, so a post always gets the same art across rebuilds and navigations. Genuinely
+random art would reshuffle on every build and make the site feel unstable — and would
+make visual review impossible.
+
+```js
+const h = hash(seed);                     // seed = post slug, passed from the route
+const [c1, c2] = PAIRS[h % PAIRS.length]; // 6 curated palette pairs
+const motif   = MOTIFS[(h >>> 3) % MOTIFS.length];   // grid | sun | rays | rings | bars
+const angle   = 100 + ((h >>> 6) % 8) * 20;
+const posX    = 20 + ((h >>> 11) % 7) * 10;
+```
+
+Design rules baked in:
+
+- **Colours come from a fixed table of palette pairs**, never from free hue rotation.
+  Random hues would eventually produce something off-brand; a curated table cannot.
+- **Different bit-slices of the same hash** drive colour, motif, angle and position, so
+  the choices vary independently instead of moving in lockstep.
+- **Pure CSS gradients** — no images, no canvas, no JS, consistent with §5.
+- The seed is the **slug**, passed explicitly from `src/pages/blog/[...slug].astro`
+  (`seed={post.id}`), because the route otherwise spreads only `post.data`. It falls back
+  to the title for callers with no slug, e.g. `MarkdownPage.astro` rendering `about.md`.
+
+### Two things that were wrong on the first attempt
+
+1. **Motif intensities drifted far apart.** Each motif's alpha was tuned by eye, and the
+   result ranged from invisible (`rings` at 0.18–0.22 alpha) to overwhelming (`sun` at
+   0.75 opacity). They now share one alpha ramp via `--c1-faint` / `--c2-faint`. **Tune
+   the shared ramp, not individual motifs.**
+2. **The sun was sized off the band's width.** `width: 60%` on a 1456px band produced an
+   ~875px circle in a 360px band, so only a middle slice showed and it read as a rounded
+   rectangle. It is now sized from the band's *height* (`height: 165%; width: auto`), so
+   it stays circular at any viewport.
+
+### The compact variant
+
+The blog index uses the **same component with the same seed** (`<HeroArt seed={post.id}
+compact />`), so a row's thumbnail is the identical picture to that post's hero. That
+match is the point — the thumbnail is a preview, not decoration.
+
+Motif geometry is authored for a ~360px band, so every fixed length is multiplied by
+`--k` (`1` full, `0.3` compact). Without it a 120x68 thumbnail shows a coarse crop of a
+few huge stripes rather than the same pattern. **Any new motif must express its lengths
+as `calc(Npx * var(--k))`**, or it will look broken at thumbnail size. Hairline widths
+(the 1px grid lines) are deliberately *not* scaled — at 0.3 they would disappear.
+
+Thumbnails carry no text, so `.art.compact .scrim` is much lighter than the full band's.
+
+### Legibility
+
+Two scrims, because one cannot do the job: a band-wide scrim dark enough to tame the sun
+would flatten `rings` into nothing. So the band carries a light vertical scrim for
+overall tone, and **`.titleband.generated .title::before` carries a second scrim local to
+the text**. Same principle as §5.6 — decoration never outranks reading.
+
+---
+
+## 9. Accessibility rules — non-negotiable
 
 - **Focus is always visible.** Global `:focus-visible { outline: 2px solid var(--cyan);
   outline-offset: 3px }`. Components may replace it with something louder; nothing may
@@ -494,7 +557,7 @@ Header and footer both render from that array, so one edit updates both.
 
 ---
 
-## 9. Gotchas already hit — don't reintroduce these
+## 10. Gotchas already hit — don't reintroduce these
 
 1. **`[hidden]` loses to a class rule.** `.help { display: grid }` overrides the UA
    `[hidden] { display: none }`, so the help overlay rendered on load. Any component with
@@ -519,13 +582,14 @@ Header and footer both render from that array, so one edit updates both.
 
 ---
 
-## 10. Where things live
+## 11. Where things live
 
 | Path | Holds |
 |---|---|
 | `src/styles/global.css` | tokens, base typography, prose, scanlines, `.grid-floor`, reduced-motion |
 | `src/components/KeyboardNav.astro` | status bar, help overlay, the entire site script |
 | `src/components/PixelIcon.astro` | 12x12 pixel-art glyph grids + run-length renderer |
+| `src/components/HeroArt.astro` | seeded generative hero artwork (5 motifs, 6 palettes) |
 | `src/consts.ts` | `SITE_TITLE`, `SITE_NAME`, `SOCIALS` |
 | `src/components/Header.astro` | sticky header, gradient underline, `[bracket]` nav hover |
 | `src/components/BaseHead.astro` | font preload, `color-scheme: dark`, `theme-color` |
@@ -541,7 +605,7 @@ Reach for `:global()` only to style a child component's markup (as `Header.astro
 
 ---
 
-## 11. Not done yet
+## 12. Not done yet
 
 - **Sprites / pixel art** — deferred by choice. The palette and grid are the backdrop for
   them when they land.
