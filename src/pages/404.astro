@@ -1,0 +1,51 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import KeyboardNav from '../components/KeyboardNav.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`404 | ${SITE_TITLE}`} description="That page could not be found." />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>404</h1>
+			{/* 404.html is prerendered, so Astro.url.pathname here is the build-time path,
+			    not the visitor's URL — printing it would be a lie. Keep it generic. */}
+			<p class="shell">$ cat ./that-page</p>
+			<p class="err">cat: no such file or directory</p>
+			<p>
+				That page isn’t here. It may have moved when this blog migrated off WordPress, or it may
+				never have existed.
+			</p>
+			<p>
+				<a href="/blog" data-knav>[ browse all posts ]</a>
+			</p>
+		</main>
+		<Footer />
+		<KeyboardNav />
+	</body>
+</html>
+
+<style>
+	main {
+		padding-top: 5em;
+	}
+	h1 {
+		font-size: clamp(3rem, 12vw, 6rem);
+		margin-bottom: 0.2em;
+	}
+	.shell {
+		color: var(--blue-soft);
+		margin-bottom: 0.2em;
+	}
+	.err {
+		color: var(--rose);
+		margin-bottom: 2em;
+	}
+</style>
