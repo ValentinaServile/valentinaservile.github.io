@@ -9,8 +9,7 @@ export const SITE_NAME = 'oooops.dev';
 
 export const SITE_DESCRIPTION = 'Writing software is hard';
 
-// TODO: replace these with real profile URLs — they are placeholders.
 export const SOCIALS = [
-	{ id: 'github', label: 'GitHub', href: 'https://github.com/' },
-	{ id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/' },
+	{ id: 'github', label: 'GitHub', href: 'https://github.com/ValentinaServile' },
+	{ id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/valentina-servile/' },
 ] as const;
