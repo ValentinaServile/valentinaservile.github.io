@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import KeyboardNav from '../components/KeyboardNav.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
 
@@ -12,20 +13,31 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	</head>
 	<body>
 		<Header />
+
+		<section class="hero">
+			<div class="sun" aria-hidden="true"></div>
+			<div class="grid-floor" aria-hidden="true"></div>
+			<div class="hero-copy">
+				<h1 data-text="Hello, Astronaut!">🧑‍🚀 Hello, Astronaut!</h1>
+				<p class="tagline">{SITE_DESCRIPTION}</p>
+				<a class="cta" href="/blog" data-knav>[ read the logs ]</a>
+			</div>
+		</section>
+
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
 			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
+				Welcome to the official <a href="https://astro.build/" data-knav>Astro</a> blog starter template.
+				This template serves as a lightweight, minimally-styled starting point for anyone looking to build
+				a personal website, blog, or portfolio with Astro.
 			</p>
 			<p>
 				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
+				<code>astro.config.mjs</code> file. You can customize your setup with{' '}
+				<a href="https://astro.build/integrations" data-knav>Astro Integrations</a> to add tools like Tailwind,
 				React, or Vue to your project.
 			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
+
+			<h2>Getting started</h2>
 			<ul>
 				<li>Edit this page in <code>src/pages/index.astro</code></li>
 				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
@@ -35,15 +47,116 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 			</ul>
 			<p>
 				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
+				<a href="https://docs.astro.build/" data-knav>read the docs</a>
+				or <a href="https://astro.build/chat" data-knav>join us on Discord</a> to ask questions.
 			</p>
 			<p>
 				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
+				<a href="https://github.com/Charca/astro-blog-template" data-knav>astro-blog-template</a>
+				by <a href="https://twitter.com/Charca" data-knav>Maxi Ferreira</a>.
 			</p>
 		</main>
+
 		<Footer />
+		<KeyboardNav />
 	</body>
 </html>
+
+<style>
+	.hero {
+		position: relative;
+		display: grid;
+		place-items: center;
+		min-height: 62vh;
+		padding: 4em 1em 6em;
+		overflow: hidden;
+		border-bottom: 1px solid var(--line);
+	}
+
+	/* the sun: sunset gradient disc, sliced by horizontal bands */
+	.sun {
+		position: absolute;
+		top: 30%;
+		width: min(30rem, 80vw);
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--sunset);
+		filter: blur(0.5px);
+		box-shadow: 0 0 90px rgba(255, 46, 151, 0.55);
+	}
+	/* bands widen toward the bottom, the classic retro-sun cut */
+	.sun::after {
+		content: '';
+		position: absolute;
+		inset: 45% 0 0 0;
+		background: repeating-linear-gradient(
+			180deg,
+			transparent 0 6px,
+			var(--bg) 6px 10px,
+			transparent 10px 18px,
+			var(--bg) 18px 26px,
+			transparent 26px 32px,
+			var(--bg) 32px 44px
+		);
+	}
+
+	.hero-copy {
+		position: relative;
+		z-index: 2;
+		text-align: center;
+		max-width: 42rem;
+	}
+	/* dark scrim: the sun is bright enough to swallow the tagline without it */
+	.hero-copy::before {
+		content: '';
+		position: absolute;
+		inset: -2.5em -3.5em;
+		z-index: -1;
+		background: radial-gradient(
+			ellipse at center,
+			rgba(7, 1, 15, 0.88) 0%,
+			rgba(7, 1, 15, 0.7) 45%,
+			transparent 78%
+		);
+	}
+
+	.hero-copy h1 {
+		position: relative;
+		font-size: clamp(1.8rem, 6vw, 3.4rem);
+		margin-bottom: 0.4em;
+		color: #fff;
+		text-shadow:
+			0 0 8px rgba(255, 46, 151, 0.9),
+			0 0 30px rgba(255, 46, 151, 0.5),
+			2px 0 0 rgba(0, 229, 255, 0.55),
+			-2px 0 0 rgba(255, 46, 151, 0.55);
+	}
+
+	.tagline {
+		color: var(--cyan);
+		text-shadow:
+			0 0 6px rgba(7, 1, 15, 0.95),
+			0 0 14px rgba(7, 1, 15, 0.9),
+			var(--glow-cyan);
+		letter-spacing: 0.05em;
+		margin-bottom: 2em;
+	}
+
+	.cta {
+		display: inline-block;
+		padding: 0.6em 1.6em;
+		color: var(--void);
+		background: var(--cyan);
+		border: none;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		box-shadow: 0 0 24px rgba(0, 229, 255, 0.55);
+	}
+	.cta:hover {
+		color: var(--void);
+		background: var(--magenta);
+		box-shadow: 0 0 30px rgba(255, 46, 151, 0.7);
+		text-shadow: none;
+	}
+</style>

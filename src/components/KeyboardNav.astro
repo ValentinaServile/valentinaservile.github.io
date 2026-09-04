@@ -1,0 +1,211 @@
+---
+/**
+ * Site-wide keyboard navigation.
+ *
+ * Moves focus between elements marked `data-knav` (vim-style j/k or arrows).
+ * Because it moves real focus rather than tracking an index, Enter/click and
+ * screen-reader announcement come for free from the browser.
+ */
+---
+
+<div class="statusbar" role="status">
+	<span class="seg seg-brand">READY</span>
+	<span class="seg"><kbd>j</kbd><kbd>k</kbd> move</span>
+	<span class="seg"><kbd>↵</kbd> open</span>
+	<span class="seg"><kbd>g</kbd> <kbd>h</kbd>/<kbd>b</kbd>/<kbd>a</kbd> goto</span>
+	<span class="seg"><kbd>?</kbd> help</span>
+	<span class="seg seg-cursor">█</span>
+</div>
+
+<div class="help" id="knav-help" hidden>
+	<div class="help-panel" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+		<h2>Keyboard</h2>
+		<dl>
+			<dt><kbd>j</kbd> / <kbd>↓</kbd></dt><dd>next item</dd>
+			<dt><kbd>k</kbd> / <kbd>↑</kbd></dt><dd>previous item</dd>
+			<dt><kbd>↵</kbd></dt><dd>open focused item</dd>
+			<dt><kbd>g</kbd> <kbd>h</kbd></dt><dd>go home</dd>
+			<dt><kbd>g</kbd> <kbd>b</kbd></dt><dd>go to blog</dd>
+			<dt><kbd>g</kbd> <kbd>a</kbd></dt><dd>go to about</dd>
+			<dt><kbd>?</kbd></dt><dd>toggle this panel</dd>
+			<dt><kbd>esc</kbd></dt><dd>close</dd>
+		</dl>
+		<p class="help-foot">tab still works everywhere.</p>
+	</div>
+</div>
+
+<script>
+	const isTyping = (el: EventTarget | null) => {
+		const node = el as HTMLElement | null;
+		if (!node) return false;
+		const tag = node.tagName;
+		return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || node.isContentEditable;
+	};
+
+	const items = () => Array.from(document.querySelectorAll<HTMLElement>('[data-knav]'));
+
+	function move(delta: number) {
+		const list = items();
+		if (!list.length) return;
+		const current = list.indexOf(document.activeElement as HTMLElement);
+		// Nothing in the list focused yet: enter at the top going down, bottom going up.
+		const next = current === -1 ? (delta > 0 ? 0 : list.length - 1) : current + delta;
+		const target = list[Math.max(0, Math.min(list.length - 1, next))];
+		target?.focus();
+		target?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+	}
+
+	const help = document.getElementById('knav-help');
+	const toggleHelp = (force?: boolean) => {
+		if (!help) return;
+		help.hidden = force !== undefined ? !force : !help.hidden;
+	};
+
+	let awaitingGoto = false;
+	let gotoTimer: ReturnType<typeof setTimeout>;
+
+	document.addEventListener('keydown', (event) => {
+		if (event.metaKey || event.ctrlKey || event.altKey) return;
+		if (isTyping(event.target)) return;
+
+		// second key of a `g` chord
+		if (awaitingGoto) {
+			awaitingGoto = false;
+			clearTimeout(gotoTimer);
+			const routes: Record<string, string> = { h: '/', b: '/blog', a: '/about' };
+			const dest = routes[event.key];
+			if (dest) {
+				event.preventDefault();
+				window.location.href = dest;
+				return;
+			}
+		}
+
+		switch (event.key) {
+			case 'j':
+			case 'ArrowDown':
+				event.preventDefault();
+				move(1);
+				break;
+			case 'k':
+			case 'ArrowUp':
+				event.preventDefault();
+				move(-1);
+				break;
+			case 'g':
+				awaitingGoto = true;
+				gotoTimer = setTimeout(() => (awaitingGoto = false), 900);
+				break;
+			case '?':
+				event.preventDefault();
+				toggleHelp();
+				break;
+			case 'Escape':
+				toggleHelp(false);
+				(document.activeElement as HTMLElement)?.blur();
+				break;
+		}
+	});
+
+	help?.addEventListener('click', () => toggleHelp(false));
+</script>
+
+<style>
+	.statusbar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 500;
+		display: flex;
+		gap: 1.4em;
+		align-items: center;
+		padding: 0.35em 1em;
+		font-size: 0.78rem;
+		letter-spacing: 0.04em;
+		color: var(--dim);
+		background: rgba(7, 1, 15, 0.92);
+		border-top: 1px solid var(--line);
+		backdrop-filter: blur(6px);
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+	.seg-brand {
+		color: var(--void);
+		background: var(--cyan);
+		padding: 0 0.6em;
+		font-weight: 700;
+	}
+	.seg-cursor {
+		margin-left: auto;
+		color: var(--magenta);
+		animation: blink 1.1s steps(1) infinite;
+	}
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	kbd {
+		display: inline-block;
+		min-width: 1.5em;
+		padding: 0 0.35em;
+		margin: 0 1px;
+		text-align: center;
+		color: var(--yellow);
+		background: var(--bg-2);
+		border: 1px solid var(--line-hot);
+		border-radius: 3px;
+		font-family: inherit;
+		font-size: 0.95em;
+	}
+
+	/* an author `display` rule outranks the UA style for [hidden], so restate it */
+	.help[hidden] {
+		display: none;
+	}
+	.help {
+		position: fixed;
+		inset: 0;
+		z-index: 900;
+		display: grid;
+		place-items: center;
+		background: rgba(7, 1, 15, 0.82);
+		backdrop-filter: blur(3px);
+	}
+	.help-panel {
+		width: min(30rem, calc(100% - 2rem));
+		padding: 1.5em 2em 2em;
+		background: var(--bg-2);
+		border: 1px solid var(--magenta);
+		border-radius: 4px;
+		box-shadow: 0 0 40px rgba(255, 46, 151, 0.35);
+	}
+	.help-panel dl {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.5em 1.5em;
+		margin: 0;
+	}
+	.help-panel dt {
+		text-align: right;
+	}
+	.help-panel dd {
+		margin: 0;
+		color: var(--dim);
+	}
+	.help-foot {
+		margin: 1.5em 0 0;
+		font-size: 0.8rem;
+		color: var(--dim);
+		opacity: 0.7;
+	}
+
+	@media (max-width: 720px) {
+		.statusbar {
+			font-size: 0.7rem;
+			gap: 0.9em;
+		}
+	}
+</style>

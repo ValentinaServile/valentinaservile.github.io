@@ -5,6 +5,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import KeyboardNav from '../components/KeyboardNav.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
@@ -14,73 +15,117 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
 	</head>
 
 	<body>
 		<Header />
 		<main>
 			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
+				{
+					heroImage && (
+						<div class="hero-image">
+							<Image width={1020} height={510} src={heroImage} alt="" />
+						</div>
+					)
+				}
 				<div class="prose">
 					<div class="title">
-						<div class="date">
+						<p class="date">
 							<FormattedDate date={pubDate} />
 							{
 								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
+									<span class="last-updated-on">
+										&middot; patched <FormattedDate date={updatedDate} />
+									</span>
 								)
 							}
-						</div>
+						</p>
 						<h1>{title}</h1>
-						<hr />
+						<p class="desc">{description}</p>
 					</div>
 					<slot />
+					<div class="endcap">
+						<span>EOF</span>
+						<a href="/blog" data-knav>[ back to index ]</a>
+					</div>
 				</div>
 			</article>
 		</main>
 		<Footer />
+		<KeyboardNav />
 	</body>
 </html>
+
+<style>
+	main {
+		width: 100%;
+		max-width: 100%;
+		padding: 0 0 3em 0;
+	}
+
+	.hero-image {
+		position: relative;
+		width: 100%;
+		max-width: 1020px;
+		margin: 2em auto 0;
+		padding: 0 1em;
+	}
+	.hero-image img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border: 1px solid var(--line-hot);
+		border-radius: 4px;
+		filter: saturate(1.35) contrast(1.05) hue-rotate(-12deg);
+		box-shadow:
+			0 0 0 1px rgba(255, 46, 151, 0.25),
+			0 0 50px rgba(255, 46, 151, 0.25);
+	}
+
+	.prose {
+		width: 760px;
+		max-width: calc(100% - 2em);
+		margin: auto;
+		padding: 1em;
+	}
+
+	.title {
+		margin: 2.5em 0 2.5em;
+		padding-bottom: 1.5em;
+		border-bottom: 1px solid var(--line);
+	}
+	.title h1 {
+		margin: 0.2em 0 0.4em;
+		font-size: clamp(1.6rem, 5vw, 2.6rem);
+	}
+	.date {
+		margin: 0;
+		color: var(--cyan);
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.last-updated-on {
+		color: var(--dim);
+		font-style: italic;
+		text-transform: none;
+	}
+	.desc {
+		margin: 0;
+		color: var(--dim);
+		font-size: 0.95rem;
+	}
+
+	.endcap {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1em;
+		margin-top: 4em;
+		padding-top: 1.5em;
+		border-top: 1px solid var(--line);
+		color: var(--purple);
+		font-size: 0.85rem;
+		letter-spacing: 0.1em;
+	}
+</style>

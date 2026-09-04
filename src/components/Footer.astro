@@ -3,7 +3,7 @@ const today = new Date();
 ---
 
 <footer>
-	&copy; {today.getFullYear()} Your name here. All rights reserved.
+	<span class="sig">&copy; {today.getFullYear()} // compiled at {today.getFullYear()} // no rights reserved, only vibes</span>
 	<div class="social-links">
 		<a href="https://m.webtoo.ls/@astro" target="_blank">
 			<span class="sr-only">Follow Astro on Mastodon</span>
@@ -41,22 +41,41 @@ const today = new Date();
 </footer>
 <style>
 	footer {
-		padding: 2em 1em 6em 1em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
-		color: rgb(var(--gray));
+		position: relative;
+		margin-top: 5em;
+		padding: 3em 1em 3em 1em;
 		text-align: center;
+		color: var(--dim);
+		font-size: 0.85rem;
+		border-top: 1px solid var(--line);
+		overflow: hidden;
+	}
+	footer::before {
+		content: '';
+		position: absolute;
+		top: -1px;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, var(--magenta), var(--cyan), transparent);
+	}
+	footer > :global(*) {
+		position: relative;
+		z-index: 1;
 	}
 	.social-links {
 		display: flex;
 		justify-content: center;
-		gap: 1em;
+		gap: 1.2em;
 		margin-top: 1em;
 	}
 	.social-links a {
-		text-decoration: none;
-		color: rgb(var(--gray));
+		display: flex;
+		color: var(--dim);
+		border: none;
 	}
 	.social-links a:hover {
-		color: rgb(var(--gray-dark));
+		color: var(--cyan);
+		text-shadow: var(--glow-cyan);
 	}
 </style>

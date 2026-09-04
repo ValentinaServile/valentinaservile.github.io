@@ -1,124 +1,293 @@
 /*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+  NEON://STDOUT — synthwave + monospace.
+  Palette is defined once here; every component reads from these tokens.
+*/
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+	/* surfaces */
+	--void: #07010f;
+	--bg: #0e0424;
+	--bg-2: #170a35;
+	--panel: rgba(38, 14, 76, 0.55);
+	--line: #3b1d6e;
+	--line-hot: #6b2fb5;
+
+	/* neon */
+	--magenta: #ff2e97;
+	--pink: #ff6ec7;
+	--cyan: #00e5ff;
+	--purple: #b06fff;
+	--yellow: #ffd93d;
+	--orange: #ff6b35;
+
+	/* text */
+	--text: #e8dcff;
+	--dim: #9d82c9;
+
+	--sunset: linear-gradient(180deg, var(--yellow) 0%, var(--orange) 48%, var(--magenta) 100%);
+	--font-stack: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+	--glow-cyan: 0 0 4px rgba(0, 229, 255, 0.7), 0 0 18px rgba(0, 229, 255, 0.35);
+	--glow-magenta: 0 0 4px rgba(255, 46, 151, 0.7), 0 0 18px rgba(255, 46, 151, 0.35);
 }
+
+* {
+	box-sizing: border-box;
+}
+
 body {
-	font-family: var(--font-atkinson);
+	font-family: var(--font-stack);
 	margin: 0;
-	padding: 0;
+	padding: 0 0 3.5rem 0;
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
+	color: var(--text);
+	font-size: 16px;
+	line-height: 1.75;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
+	background-color: var(--bg);
+	background-image:
+		radial-gradient(ellipse 80% 55% at 50% -10%, rgba(255, 46, 151, 0.28), transparent 70%),
+		radial-gradient(ellipse 60% 45% at 85% 15%, rgba(0, 229, 255, 0.14), transparent 70%),
+		linear-gradient(180deg, var(--bg) 0%, var(--void) 100%);
+	background-attachment: fixed;
+	min-height: 100vh;
 }
+
+/* CRT scanlines — sits above everything, ignores the mouse */
+body::after {
+	content: '';
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 9999;
+	background: repeating-linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0.16) 0 1px,
+		transparent 1px 3px
+	);
+	mix-blend-mode: multiply;
+}
+
 main {
-	width: 720px;
+	width: 760px;
 	max-width: calc(100% - 2em);
 	margin: auto;
 	padding: 3em 1em;
 }
+
+/* ---------- type ---------- */
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
-	line-height: 1.2;
+	margin: 0 0 0.6rem 0;
+	line-height: 1.15;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	font-weight: 700;
+	color: #fff;
 }
+
 h1 {
-	font-size: 3.052em;
+	font-size: 2.4rem;
+	color: var(--magenta);
+	text-shadow: var(--glow-magenta);
 }
 h2 {
-	font-size: 2.441em;
+	font-size: 1.7rem;
+	color: var(--cyan);
+	text-shadow: var(--glow-cyan);
 }
 h3 {
-	font-size: 1.953em;
+	font-size: 1.3rem;
+	color: var(--purple);
 }
 h4 {
-	font-size: 1.563em;
+	font-size: 1.1rem;
 }
-h5 {
-	font-size: 1.25em;
+h5,
+h6 {
+	font-size: 1rem;
+	color: var(--dim);
 }
+
+/* section headings get a prompt marker */
+h2::before,
+h3::before {
+	content: '// ';
+	opacity: 0.55;
+}
+
+p {
+	margin-bottom: 1.2em;
+}
+.prose p {
+	margin-bottom: 1.6em;
+}
+
 strong,
 b {
 	font-weight: 700;
+	color: #fff;
 }
+
+em,
+i {
+	color: var(--pink);
+}
+
 a {
-	color: var(--accent);
+	color: var(--cyan);
+	text-decoration: none;
+	border-bottom: 1px solid rgba(0, 229, 255, 0.35);
+	transition:
+		color 0.15s ease,
+		border-color 0.15s ease,
+		text-shadow 0.15s ease;
 }
 a:hover {
-	color: var(--accent);
+	color: var(--magenta);
+	border-bottom-color: var(--magenta);
+	text-shadow: var(--glow-magenta);
 }
-p {
-	margin-bottom: 1em;
+
+ul,
+ol {
+	padding-left: 1.4em;
 }
-.prose p {
-	margin-bottom: 2em;
+li {
+	margin-bottom: 0.4em;
 }
-textarea {
-	width: 100%;
-	font-size: 16px;
+ul li::marker {
+	content: '▸ ';
+	color: var(--magenta);
 }
-input {
-	font-size: 16px;
+
+hr {
+	border: none;
+	border-top: 1px solid var(--line);
+	margin: 2.5em 0;
 }
-table {
-	width: 100%;
+
+blockquote {
+	border-left: 3px solid var(--magenta);
+	background: var(--panel);
+	padding: 0.8em 1.2em;
+	margin: 0 0 1.5em 0;
+	color: var(--pink);
+	font-style: italic;
 }
-img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 8px;
-}
+
 code {
-	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
+	font-family: var(--font-stack);
+	padding: 1px 6px;
+	font-size: 0.92em;
+	background: rgba(176, 111, 255, 0.16);
+	border: 1px solid var(--line);
+	border-radius: 3px;
+	color: var(--yellow);
 }
+
 pre {
-	padding: 1.5em;
-	border-radius: 8px;
+	padding: 1.2em;
+	border: 1px solid var(--line);
+	border-left: 3px solid var(--cyan);
+	border-radius: 4px;
+	background: rgba(7, 1, 15, 0.75) !important;
+	overflow-x: auto;
+	font-size: 0.9rem;
 }
 pre > code {
 	all: unset;
+	font-family: var(--font-stack);
 }
-blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0;
-	font-size: 1.333em;
+
+img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 4px;
 }
-hr {
-	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
+
+table {
+	width: 100%;
+	border-collapse: collapse;
 }
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
+th,
+td {
+	border: 1px solid var(--line);
+	padding: 0.4em 0.7em;
+	text-align: left;
+}
+th {
+	background: var(--panel);
+	color: var(--cyan);
+	text-transform: uppercase;
+}
+
+input,
+textarea,
+select,
+button {
+	font-family: var(--font-stack);
+	font-size: 1rem;
+	background: var(--bg-2);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: 3px;
+	padding: 0.4em 0.6em;
+}
+textarea {
+	width: 100%;
+}
+
+/* ---------- focus / keyboard ---------- */
+
+:focus-visible {
+	outline: 2px solid var(--cyan);
+	outline-offset: 3px;
+	border-radius: 2px;
+}
+
+/* ---------- decorative ---------- */
+
+/* perspective grid floor */
+.grid-floor {
+	position: absolute;
+	inset: auto 0 0 0;
+	height: 45%;
+	overflow: hidden;
+	pointer-events: none;
+	perspective: 260px;
+	perspective-origin: 50% 0%;
+	mask-image: linear-gradient(180deg, transparent, #000 35%);
+	-webkit-mask-image: linear-gradient(180deg, transparent, #000 35%);
+}
+.grid-floor::before {
+	content: '';
+	position: absolute;
+	inset: -20% -60% -60% -60%;
+	background-image:
+		repeating-linear-gradient(to right, rgba(255, 46, 151, 0.5) 0 1px, transparent 1px 64px),
+		repeating-linear-gradient(to bottom, rgba(0, 229, 255, 0.45) 0 1px, transparent 1px 64px);
+	transform: rotateX(74deg);
+	transform-origin: 50% 0%;
+	animation: grid-scroll 2.6s linear infinite;
+}
+
+@keyframes grid-scroll {
+	from {
+		background-position:
+			0 0,
+			0 0;
 	}
-	main {
-		padding: 1em;
+	to {
+		background-position:
+			0 0,
+			0 64px;
 	}
 }
 
@@ -130,12 +299,32 @@ hr {
 	height: 1px;
 	width: 1px;
 	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
 	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
 	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+	body {
+		font-size: 15px;
+	}
+	main {
+		padding: 1.5em 1em;
+	}
+	h1 {
+		font-size: 1.7rem;
+	}
+	h2 {
+		font-size: 1.3rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+	}
 }
