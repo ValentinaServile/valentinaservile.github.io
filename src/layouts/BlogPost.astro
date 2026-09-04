@@ -58,11 +58,17 @@ const {
 						<h1>{title}</h1>
 						<p class="desc">{description}</p>
 						{
-							(categories.length > 0 || tags.length > 0) && (
+							categories.length > 0 && (
 								<ul class="taxonomy">
 									{categories.map((c) => (
 										<li class="cat">{c}</li>
 									))}
+								</ul>
+							)
+						}
+						{
+							tags.length > 0 && (
+								<ul class="taxonomy">
 									{tags.map((t) => (
 										<li class="tag">#{t}</li>
 									))}
@@ -210,6 +216,10 @@ const {
 		margin: 1.2em 0 0 0;
 		padding: 0;
 		font-size: 0.75rem;
+	}
+	/* categories and tags are separate lists, each wrapping on its own line */
+	.taxonomy + .taxonomy {
+		margin-top: 0.5em;
 	}
 	.taxonomy li {
 		margin: 0;
