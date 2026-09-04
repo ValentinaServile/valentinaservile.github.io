@@ -34,11 +34,13 @@ We are column 2, typeset with column 1's font.
    *component libraries* (98.css, NES.css, 8bitcn/ui) were rejected too: they solve an
    **app's** problem — buttons, dialogs, tabs — while a blog is ~90% prose typography,
    which those libraries don't style and actively fight.
-2. **Ship as close to zero JavaScript as possible.** Current total: **one ~1 KB inlined
-   module script** for keyboard nav. `dist/` contains no `.js` files at all — Astro
-   inlines a script that small directly into each HTML page.
-3. **Everything is CSS.** No images are used for decoration. The sun, the grid, the
-   scanlines, and the glow are all gradients and pseudo-elements. Nothing to download,
+2. **Ship as close to zero JavaScript as possible.** Current total: **932 bytes** of
+   inlined script for keyboard nav on every page, plus **1.6 KB on the homepage only**
+   for the error popups (§9). `dist/` contains no `.js` files at all — Astro inlines
+   scripts that small directly into each HTML page. A post page is still 932 bytes.
+3. **Everything is CSS.** No images are used for decoration. The horizon glow, the grid,
+   the scanlines, the dialog chrome and the text glow are all gradients and
+   pseudo-elements. Nothing to download,
    nothing to art-direct, everything themeable by changing one token.
 
 ---
@@ -60,7 +62,7 @@ All colour and type live as custom properties on `:root` in `src/styles/global.c
 /* neon — ARTWORK ONLY. Never body text. */
 --neon-magenta: #ff2e97;   /* sun gradient, grid lines, header/footer edge */
 --neon-cyan:    #00e5ff;   /* grid lines, header/footer edge */
---orange:       #ff6b35;   /* sunset midpoint only */
+--orange:       #ff6b35;   /* horizon glow, hero art palette */
 --yellow:       #ffd93d;   /* code literals, kbd glyphs */
 
 /* muted — TEXT roles. Contrast-checked against --bg and --void. */
@@ -93,10 +95,12 @@ heading, or link, that's the bug.
 and `--void`, and all clear 4.5:1 (WCAG AA body text). Re-run that check before changing
 one — the ratios are in the comments so a regression is visible in review.
 
-Two composite tokens do the heavy lifting:
+`--paper: #f2eaff` is the one light surface on the site. It exists for the error popups
+(§9), whose Win95 dialogs need a face to bevel against; nothing else should use it.
+
+One composite token does the heavy lifting:
 
 ```css
---sunset: linear-gradient(180deg, var(--yellow) 0%, var(--orange) 48%, var(--magenta) 100%);
 --font-stack: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 ```
 
@@ -219,32 +223,33 @@ Three principles here, all reusable:
 - **`mix-blend-mode: multiply`** darkens what's beneath instead of laying grey film over
   it, so bright neon keeps its saturation and only the darks deepen.
 
-### 5.3 The sunset sun — a gradient disc, sliced by a striped pseudo-element
+### 5.3 The horizon glow — three stacked ellipses where the sun used to be
+
+The hero originally carried a banded sunset disc (`.sun`). It was removed once the error
+popups (§9) moved in: two loud things fighting over the same 400px band read as clutter,
+and the popups are the ones you are meant to look at. What replaced it is quieter and
+does the same job — put warm light at the vanishing point.
 
 ```css
-.sun {
-  position: absolute; top: 26%;
-  width: min(25rem, 72vw); aspect-ratio: 1; border-radius: 50%;
-  background: var(--sunset);
-  filter: blur(0.5px);
-  box-shadow: 0 0 90px rgba(255, 46, 151, 0.55);
-}
-.sun::after {
-  content: ''; position: absolute; inset: 45% 0 0 0;
-  background: repeating-linear-gradient(180deg,
-    transparent 0 6px,  var(--bg) 6px 10px,
-    transparent 10px 18px, var(--bg) 18px 26px,
-    transparent 26px 32px, var(--bg) 32px 44px);
+.glow {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 55% 32% at 50% 62%,
+      color-mix(in srgb, var(--neon-magenta) 38%, transparent), transparent 70%),
+    radial-gradient(ellipse 85% 45% at 50% 66%,
+      color-mix(in srgb, var(--orange) 22%, transparent), transparent 72%),
+    radial-gradient(ellipse 120% 60% at 50% 78%,
+      color-mix(in srgb, var(--neon-cyan) 14%, transparent), transparent 70%);
 }
 ```
 
-- `aspect-ratio: 1` + `border-radius: 50%` gives a perfect circle at any width, so
-  `min(25rem, 72vw)` is the only size knob.
-- The classic retro-sun banding is **not** a mask — it's a child painted in the page
-  background colour, covering the bottom 55% (`inset: 45% 0 0 0`). The stop list uses
-  **irregular, widening intervals** (6/4, 8/8, 6/12) rather than even stripes, which is
-  what makes it read as a horizon sinking rather than a barcode.
-- `filter: blur(0.5px)` takes the hard aliasing off the circle edge.
+- **Each ellipse is wider and fainter than the one before it** (38% / 22% / 14%), and
+  they sit slightly lower each time (62% / 66% / 78%). That ordering is the whole effect:
+  a hot core bleeding out into haze. Equal-strength layers just make a muddy wash.
+- **`color-mix` rather than `rgba()` literals**, so the glow is built from the palette
+  tokens and follows them if they ever change. The older effects in this section predate
+  that and still carry raw `rgba()`; new work should not.
+- It sits *below* the grid floor in the DOM, so the gridlines read as lit by it.
 
 ### 5.4 The perspective grid floor — 3D transform on a flat gradient
 
@@ -309,7 +314,8 @@ text-shadow:
 
 ### 5.6 Legibility over bright artwork — the scrim
 
-Cyan text crossing the orange sun was unreadable. The fix is a **scrim**: a dark radial
+Cyan text crossing the old orange sun was unreadable, and the gridlines still cross the
+tagline today. The fix is a **scrim**: a dark radial
 gradient on `.hero-copy::before` at `z-index: -1`, inset *negatively* so it extends past
 the text box and fades to transparent before its edge shows.
 
@@ -406,7 +412,7 @@ below the threshold to `*.asis.*`.
 
 Two behaviours are switched on by markers in the image filename, chosen over CSS classes
 because Markdown gives no way to put a class on an image, and over basename selectors
-because basenames repeat across posts (see the gotcha in §10).
+because basenames repeat across posts (see the gotcha in §11).
 
 | marker | effect |
 |---|---|
@@ -619,7 +625,90 @@ the text**. Same principle as §5.6 — decoration never outranks reading.
 
 ---
 
-## 9. Accessibility rules — non-negotiable
+## 9. Error popups — `src/components/ErrorPopups.astro`
+
+Vaporwave Windows 95 dialogs open over the hero, one every five seconds, in random
+places. They are the hero's only moving content besides the grid.
+
+### The content is data, the component is chrome
+
+Everything a joke needs lives in `src/data/error-messages.json`:
+
+```json
+{
+  "intervalSeconds": 5,
+  "maxOnScreen": 3,
+  "dialogs": [
+    { "title": "Warning!", "message": "Deploying on a Friday.", "buttons": ["Do it", "Coward"] }
+  ]
+}
+```
+
+Adding a joke is editing that file. The component reads it at build time and **renders
+every dialog into the HTML, each starting `hidden`**; the script only ever unhides one
+and positions it. That is deliberate:
+
+- No client-side templating and **no `innerHTML`** — the text goes through Astro's
+  escaping like any other content, so an apostrophe or a `<` in a joke cannot break the
+  page or inject anything.
+- The script stays small enough to inline: **1.6 KB, and only on the homepage**.
+- The frontmatter **throws on malformed JSON** (missing title, message, or buttons) so a
+  typo fails the build instead of silently emptying the hero.
+
+Every button dismisses, including the ones that say `Coward` or `Why`. They are jokes,
+not decisions — do not wire behaviour to them.
+
+### Placement
+
+`place()` picks a random spot inside the layer, then **re-rolls up to 12 times to find
+one that misses `.hero-copy`**, keeping the last try if it cannot. So the wordmark is
+usually clear, dialogs still sometimes overlap each other (which is the look), and the
+hero never ends up empty because the algorithm gave up.
+
+Three details that are easy to get wrong:
+
+- **Measure with `offsetWidth`, not `getBoundingClientRect()`.** The entrance animation
+  starts at `scale(0.94)`, and a rect reports the *transformed* box — 248px for a 264px
+  dialog, which let dialogs land ~16px off-stage before this was fixed.
+- **Unhide before measuring.** A `display: none` element has no box; measuring first
+  gives zeroes and every dialog lands in the corner.
+- **`overflow: hidden` on the layer is the backstop, not the mechanism.** Placement keeps
+  dialogs inside with a 12px margin; the clip only catches a resize mid-life.
+
+### Stopping, which matters more than starting
+
+- **`prefers-reduced-motion`**: one dialog, once, and no timer at all. The build folds
+  the branch out entirely — no `setInterval`, no `IntersectionObserver` in the shipped
+  script. Verified by grepping `dist/index.html`, not by reading the source.
+- **Off-screen or backgrounded**: an `IntersectionObserver` on the hero and
+  `visibilitychange` both pause the rotation. Nobody needs windows popping at them while
+  they read the archive three screens down.
+- **The cap is three**, and culling **skips any dialog containing `document.activeElement`**
+  — a keyboard user tabbed into a close button never has it yanked out from under them.
+
+### The Win95 look, in tokens
+
+```css
+.dialog {
+  --face: color-mix(in srgb, var(--hue) 28%, var(--paper));
+  --edge-dark: color-mix(in srgb, var(--hue) 55%, var(--void));
+  box-shadow:
+    inset  1px  1px 0 var(--paper),      /* highlight, top-left */
+    inset -1px -1px 0 var(--edge-dark),  /* shade, bottom-right */
+    3px 3px 0 color-mix(in srgb, var(--void) 60%, transparent);
+}
+```
+
+- **One `--hue` per dialog drives everything else.** Tones cycle by index across cyan,
+  magenta, purple and blue, so neighbours never match. Adding a tone is one CSS rule.
+- **No blur anywhere.** The drop shadow is a hard 3px offset; `:active` swaps the two
+  inset edges and nudges the label 1px. Blur is what makes fake chrome look fake.
+- **Dark text on every title bar.** The reference art puts white on cyan, which is
+  1.3:1. `--void` on these hues runs 5.4:1 to 13.4:1, and on the body tints 12:1+.
+- **`.dialog[hidden] { display: none }` is not redundant** — the class rule sets
+  `display`, and a class beats the UA's `[hidden]`. Same trap as the help overlay (§11).
+
+## 10. Accessibility rules — non-negotiable
 
 - **Focus is always visible.** Global `:focus-visible { outline: 2px solid var(--cyan);
   outline-offset: 3px }`. Components may replace it with something louder; nothing may
@@ -635,7 +724,7 @@ the text**. Same principle as §5.6 — decoration never outranks reading.
     }
   }
   ```
-- **Decorative elements are `aria-hidden="true"`** (`.sun`, `.grid-floor`, the `▶`) and
+- **Decorative elements are `aria-hidden="true"`** (`.glow`, `.grid-floor`, the `▶`) and
   `pointer-events: none` where they overlay content.
 - **Contrast is checked against the artwork, not the flat background.** See §5.6.
 - **Keyboard nav is additive.** The site is fully usable with Tab and the mouse alone;
@@ -643,7 +732,7 @@ the text**. Same principle as §5.6 — decoration never outranks reading.
 
 ---
 
-## 10. Gotchas already hit — don't reintroduce these
+## 11. Gotchas already hit — don't reintroduce these
 
 1. **`[hidden]` loses to a class rule.** `.help { display: grid }` overrides the UA
    `[hidden] { display: none }`, so the help overlay rendered on load. Any component with
@@ -670,10 +759,17 @@ the text**. Same principle as §5.6 — decoration never outranks reading.
 8. **Headings shipped with `margin-top: 0`** for a while, which made every heading collide
    with the block above it — most visibly tables, which have no UA margin to fall back on.
    Fixed by the rhythm block in §4; don't reintroduce a bare `margin: 0 0 X 0` on headings.
+9. **`getBoundingClientRect()` measures the *animated* box.** The popups' entrance
+   animation starts at `scale(0.94)`, so a freshly shown dialog measured 248px instead of
+   264px and could be placed 16px off-stage. Use `offsetWidth`/`offsetHeight` when you
+   want the layout box, and a rect only for viewport position.
+10. **A local dev server is not always what you are looking at.** Half an hour went into
+   "why isn't my change live" before noticing port 4321 was `astro preview` serving a
+   stale `dist/`, not `astro dev`. Check `ps` before debugging the code.
 
 ---
 
-## 11. Where things live
+## 12. Where things live
 
 | Path | Holds |
 |---|---|
@@ -682,10 +778,12 @@ the text**. Same principle as §5.6 — decoration never outranks reading.
 | `src/components/PixelIcon.astro` | 12x12 pixel-art glyph grids + run-length renderer |
 | `scripts/build-favicon.py` | draws `public/favicon.svg` + `favicon.ico` from one 16x16 grid |
 | `src/components/HeroArt.astro` | seeded generative hero artwork (5 motifs, 6 palettes) |
+| `src/components/ErrorPopups.astro` | Win95 dialogs over the hero: chrome, placement, pausing |
+| `src/data/error-messages.json` | the jokes — titles, messages, button labels, timing |
 | `src/consts.ts` | `SITE_TITLE`, `SITE_NAME`, `SOCIALS` |
 | `src/components/Header.astro` | sticky header, gradient underline, `[bracket]` nav hover |
 | `src/components/BaseHead.astro` | font preload, `color-scheme: dark`, `theme-color` |
-| `src/pages/index.astro` | hero — sun, grid, scrim, CTA |
+| `src/pages/index.astro` | hero — glow, grid, scrim, CTA; category/tag index |
 | `src/pages/blog/index.astro` | post list grid and its interaction states |
 | `src/layouts/BlogPost.astro` | article shell, hero image treatment, `EOF` endcap |
 | `astro.config.mjs` | font provider, integrations |
@@ -697,7 +795,7 @@ Reach for `:global()` only to style a child component's markup (as `Header.astro
 
 ---
 
-## 12. Not done yet
+## 13. Not done yet
 
 - **Sprites / pixel art** — deferred by choice. The palette and grid are the backdrop for
   them when they land.

@@ -26,10 +26,10 @@
 	--purple: #9b82cf; /* h3, indices, structure      6.1:1 */
 
 	/* text */
+	--paper: #f2eaff; /* light surface — dialog faces and bevels only */
 	--text: #e8dcff;
 	--dim: #9d82c9;
 
-	--sunset: linear-gradient(180deg, var(--yellow) 0%, var(--orange) 48%, var(--neon-magenta) 100%);
 	--font-stack: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
 	/* muted text glows: tight core + wide bleed, but lower alpha than the neon era */

@@ -1,0 +1,26 @@
+{
+  "intervalSeconds": 5,
+  "maxOnScreen": 4,
+  "dialogs": [
+    { "title": "Error", "message": "High level of error logs", "buttons": ["Restart pods"] },
+    { "title": "Warning!", "message": "Deploying on a Friday after 4pm.", "buttons": ["Do it", "Coward"] },
+    { "title": "Attention!", "message": "0% test coverage", "buttons": ["Ship it"] },
+    { "title": "Error", "message": "404: thought leadership not found.", "buttons": ["Retry"] },
+    { "title": "Warning!", "message": "Merge conflict in 47 files.", "buttons": ["Quit job"] },
+    { "title": "Error", "message": "You broke the build", "buttons": ["Go to lunch", "Add more commits"] },
+    { "title": "Attention!", "message": "Someone else introduced a bug.", "buttons": ["git blame"] },
+    { "title": "Attention!", "message": "You introduced a bug.", "buttons": ["Blame unclear requirements"] },
+    { "title": "Warning!", "message": "You are becoming post-technical.", "buttons": ["Weekend project", "Micromanage your team"] },
+    { "title": "Attention!", "message": "This compiles. Nobody knows why.", "buttons": ["Don't touch it"] },
+    { "title": "Error", "message": "372827 open CVEs", "buttons": ["Ship next feature instead"] },
+    { "title": "Warning!", "message": "Someone is measuring your velocity.", "buttons": ["Inflate estimates"] },
+    { "title": "Error", "message": "Too gay to function.", "buttons": ["Only Janis can say that"] },
+    { "title": "Warning!", "message": "Current function is 892127 lines long", "buttons": ["Refactor", "Ignore"] },
+    { "title": "Attention!", "message": "TODO dated 2019.", "buttons": ["Leave it"] },
+    { "title": "Error", "message": "Flaky test failed.", "buttons": ["Re-run"] },
+    { "title": "Warning!", "message": "Reorg detected.", "buttons": ["Ignore", "#OpenToWork"] },
+    { "title": "Error", "message": "Sprint 14 of a 2-week MVP.", "buttons": ["Continue"] },
+    { "title": "Error", "message": "Deploy freeze until January.", "buttons": ["It's June"] },
+    { "title": "Warning!", "message": "Someone rewrote this service in Rust", "buttons": ["Rewrite it"] }
+  ]
+}

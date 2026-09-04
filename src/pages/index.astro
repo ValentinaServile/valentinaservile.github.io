@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import ErrorPopups from '../components/ErrorPopups.astro';
 import KeyboardNav from '../components/KeyboardNav.astro';
 import { getCollection } from 'astro:content';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE } from '../consts';
@@ -32,13 +33,14 @@ const span = `${Math.min(...years)}–${Math.max(...years)}`;
 		<Header />
 
 		<section class="hero">
-			<div class="sun" aria-hidden="true"></div>
+			<div class="glow" aria-hidden="true"></div>
 			<div class="grid-floor" aria-hidden="true"></div>
 			<div class="hero-copy">
 				<h1 class="wordmark">{SITE_NAME}</h1>
 				<p class="tagline">{SITE_DESCRIPTION}</p>
 				<a class="cta" href="/blog" data-knav>[ read the logs ]</a>
 			</div>
+			<ErrorPopups />
 		</section>
 
 		<main>
@@ -96,31 +98,28 @@ const span = `${Math.min(...years)}–${Math.max(...years)}`;
 		border-bottom: 1px solid var(--line);
 	}
 
-	/* the sun: sunset gradient disc, sliced by horizontal bands */
-	.sun {
+	/* Horizon glow: the sun's colours without the sun. Three stacked ellipses, each
+	   wider and fainter than the last, centred where the grid meets the sky — so the
+	   light still comes from the vanishing point, but nothing competes with the copy. */
+	.glow {
 		position: absolute;
-		top: 26%;
-		width: min(25rem, 72vw);
-		aspect-ratio: 1;
-		border-radius: 50%;
-		background: var(--sunset);
-		filter: blur(0.5px);
-		box-shadow: 0 0 90px rgba(255, 46, 151, 0.55);
-	}
-	/* bands widen toward the bottom, the classic retro-sun cut */
-	.sun::after {
-		content: '';
-		position: absolute;
-		inset: 45% 0 0 0;
-		background: repeating-linear-gradient(
-			180deg,
-			transparent 0 6px,
-			var(--bg) 6px 10px,
-			transparent 10px 18px,
-			var(--bg) 18px 26px,
-			transparent 26px 32px,
-			var(--bg) 32px 44px
-		);
+		inset: 0;
+		background:
+			radial-gradient(
+				ellipse 55% 32% at 50% 62%,
+				color-mix(in srgb, var(--neon-magenta) 38%, transparent),
+				transparent 70%
+			),
+			radial-gradient(
+				ellipse 85% 45% at 50% 66%,
+				color-mix(in srgb, var(--orange) 22%, transparent),
+				transparent 72%
+			),
+			radial-gradient(
+				ellipse 120% 60% at 50% 78%,
+				color-mix(in srgb, var(--neon-cyan) 14%, transparent),
+				transparent 70%
+			);
 	}
 
 	.hero-copy {
@@ -129,17 +128,21 @@ const span = `${Math.min(...years)}–${Math.max(...years)}`;
 		text-align: center;
 		max-width: 42rem;
 	}
-	/* dark scrim: the sun is bright enough to swallow the tagline without it */
+	/* Dark scrim: the grid lines cross the tagline and a popup may land behind it, so
+	   the copy still needs its own ground. Four stops rather than three, and a lower
+	   peak than the sun-era scrim needed — the visible edge of a scrim comes from a
+	   steep ramp, not from its size, so the tail does the work. */
 	.hero-copy::before {
 		content: '';
 		position: absolute;
-		inset: -2.5em -3.5em;
+		inset: -1.6em -2.6em;
 		z-index: -1;
 		background: radial-gradient(
 			ellipse at center,
-			rgba(7, 1, 15, 0.88) 0%,
-			rgba(7, 1, 15, 0.7) 45%,
-			transparent 78%
+			color-mix(in srgb, var(--void) 60%, transparent) 0%,
+			color-mix(in srgb, var(--void) 42%, transparent) 34%,
+			color-mix(in srgb, var(--void) 18%, transparent) 62%,
+			transparent 84%
 		);
 	}
 
