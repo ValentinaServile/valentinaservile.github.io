@@ -7,7 +7,7 @@ export const SITE_TITLE = 'oooops.dev//stdout';
 /** Bare domain — used as the hero wordmark. */
 export const SITE_NAME = 'oooops.dev';
 
-export const SITE_DESCRIPTION = 'Dispatches from the terminal. Code, synths, and other artifacts.';
+export const SITE_DESCRIPTION = 'Writing software is hard';
 
 // TODO: replace these with real profile URLs — they are placeholders.
 export const SOCIALS = [
