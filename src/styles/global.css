@@ -340,6 +340,19 @@ textarea {
 	mix-blend-mode: screen;
 }
 
+/* `.small.` in the filename renders an image at 30% of the content width — for icons
+   and small diagrams that would otherwise blow up to the full column. Independent of
+   the `.asis.` marker, so `diagram.small.asis.png` does both. */
+.prose img[src*='.small.'] {
+	width: 30%;
+	/* 30% of a phone viewport is unreadably small, so relax it there */
+}
+@media (max-width: 720px) {
+	.prose img[src*='.small.'] {
+		width: 60%;
+	}
+}
+
 /* ---------- focus / keyboard ---------- */
 
 :focus-visible {

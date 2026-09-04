@@ -402,6 +402,24 @@ Two opt-outs exist because two different scopes need it:
 To re-classify after adding images, re-run the luminance measurement and rename anything
 below the threshold to `*.asis.*`.
 
+### Filename markers
+
+Two behaviours are switched on by markers in the image filename, chosen over CSS classes
+because Markdown gives no way to put a class on an image, and over basename selectors
+because basenames repeat across posts (see the gotcha in §10).
+
+| marker | effect |
+|---|---|
+| `*.asis.*` | never invert this image |
+| `*.small.*` | render at 30% of the content width (60% under 720px) |
+
+They are independent and compose: `diagram.small.asis.png` is both small and uninverted.
+Astro preserves the basename through hashing (`diagram.small.C7xk2p.webp`), so the
+`[src*='.small.']` attribute selector survives the build.
+
+Renaming an image means updating its Markdown reference too — and reference rewrites must
+be keyed on the **full path**, never the basename.
+
 ---
 
 ## 6. JavaScript principles — `src/components/KeyboardNav.astro`

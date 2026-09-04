@@ -44,15 +44,11 @@ Before diving in, let’s take a moment to refresh some definitions.
 
 ### What is Trunk Based Development?
 
-```
-Trunk Based Development focuses on doing all work on Mainline (called “trunk” [...]), and thus avoiding any kind of long-lived branches.
-```
+> Trunk Based Development focuses on doing all work on Mainline (called “trunk” [...]), and thus avoiding any kind of long-lived branches.
 
 ### What is Continuous Deployment?
 
-```
-Continuous Deployment, means that every change on your mainline, or "trunk" branch goes through the pipeline and automatically gets put into production.
-```
+> Continuous Deployment, means that every change on your mainline, or "trunk" branch goes through the pipeline and automatically gets put into production.
 
 The concepts themselves are quite simple. If you’re new to this and want to understand the subject a little bit better before continuing, you should check out Martin Fowler’s blog, the Continuous Delivery book and maybe [this article](https://arxiv.org/abs/1703.07019).
 
@@ -277,7 +273,7 @@ This approach certainly works – but is the optimal way to approach new feature
 
 Many developers prefer to approach the application from the outside in when developing something new. Especially if they are practicing “outside-in” TDD and would love to write a failing end to end test first. Again, it is out of the scope of this article to explain all of the benefits of this practice, but here is a summary:
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-16.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-16.small.png)
 
 -   Starting by the layers visible to the user allows for early validation of the business requirements: if it is unclear what should be the visible effects of the feature from the outside, this step will reveal it immediately. Starting development becomes the last responsible moment for challenging badly written user stories.
 -   The API of each layer is directly driven by its client (the layer above it), which makes designing each layer much simpler and less speculative. This reduces the risk of having to re-work components because we did not foresee how they would be invoked, or to add functionality that will end up not being used.
@@ -703,7 +699,7 @@ It consists of three steps:
 
 ## Inside-Out
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-21.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-21.small.png)
 
 With the expand and contract approach, we have to start expansions with the producer systems and then migrate the consumers. This means we have to start with our innermost layers, working our way out to the ultimate client (UI code).  
   
@@ -1016,7 +1012,7 @@ Foreign-key constraints:
 
 **One change per repository?**
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-22.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-22.small.png)
 
 On many occasions, I have seen the persistence code being kept in the same source control repository as the backend code. Our example is no exception.
 
@@ -1251,7 +1247,7 @@ In our expenses types example, it might look something like this:
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-28.png)
 
-![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/dkDYd2rLuVwldGAxe0WVQMIyCJkd1odLo96kdo5cx5MWvQuvQXpsWs9iP5tse1EMZ1ZdkBcr3_2H6nK8bsSip7rgrb0ruik_9sqamMe9Fmjf6Tonfr9t4-FaM4aqWaSW-zCIjM7-P8Q.png)
+![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/dkDYd2rLuVwldGAxe0WVQMIyCJkd1odLo96kdo5cx5MWvQuvQXpsWs9iP5tse1EMZ1ZdkBcr3_2H6nK8bsSip7rgrb0ruik_9sqamMe9Fmjf6Tonfr9t4-FaM4aqWaSW-zCIjM7-P8Q.small.png)
 
 In the author’s experience, this should probably be very informal during development. A scribble on some post-it notes or a notebook would probably suffice. The purpose of this exercise would be to put ourselves in the good habit of taking dependencies explicitly into consideration at the beginning of a task – without going headfirst on the code.
 
