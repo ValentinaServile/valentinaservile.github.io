@@ -7,13 +7,13 @@ updatedDate: '2022-10-25'
 
 This is a learning path every new graduate or consultant developer can follow.
 
-This path reflects agile culture and values, which have their roots in the [agile manifesto](http://agilemanifesto.org/), as well as in those of XP, and in the [software craftsmanship manifesto](http://manifesto.softwarecraftsmanship.org/).
+This path reflects agile culture and values, which have their roots in the [agile manifesto](http://agilemanifesto.org/), in XP, and in the [software craftsmanship manifesto](http://manifesto.softwarecraftsmanship.org/).
 
-This study path is not meant to teach specific languages and tech stacks: rather it reflects how to builds all sort of software according to reusable agile, clean code and design principles.
+This study path is not meant to teach specific languages and tech stacks: rather, it reflects how to build all sorts of software according to reusable agile, clean code and design principles.
 
-Yes, it is a lot of content. No, you don’t have to have read _all of it_ before you start your career growth to the next level. However, you should at the very least be comfortable explaining each and every topic in this list. If you are not, then that should be considered a **knowledge gap**.
+Yes, it is a lot of content. No, you don’t have to have read _all of it_ before you move up to the next level of your career. However, you should at the very least be comfortable explaining each and every topic in this list. If you are not, then that should be considered a **knowledge gap**.
 
-This study path is adapted from a battle tested one [https://github.com/xpeppers/starway-to-orione](https://github.com/xpeppers/starway-to-orione) and is composed of basic reference literature, articles and videos for each topic. After following this, you should be able to hold your own and provide meaningful references in any conversation with your peers.
+This study path is adapted from a battle-tested one, [https://github.com/xpeppers/starway-to-orione](https://github.com/xpeppers/starway-to-orione), and is composed of basic reference literature, articles and videos for each topic. After following this, you should be able to hold your own and provide meaningful references in any conversation with your peers.
 
 It is meant to be consumed in sequence.
 
@@ -38,9 +38,9 @@ It is meant to be consumed in sequence.
 -   Read chapters 1 and 2 from The Agile Samurai book
     -   Agile in a nutshell
     -   Meet your agile team
--   Read this summarized article: [What Exactly is the Agile Mindset?](https://www.infoq.com/articles/what-agile-mindset/)
+-   Read this summary article: [What Exactly is the Agile Mindset?](https://www.infoq.com/articles/what-agile-mindset/)
 -   Watch the talk [The Power of an Agile Mindset by Linda Rising](https://www.youtube.com/watch?v=W47rcJowx7k) (optional)
--   Read first chapter of “Applying UML and Patterns” (optional)
+-   Read the first chapter of “Applying UML and Patterns” (optional)
 
 ### 1.3) Extreme Programming
 
@@ -96,7 +96,7 @@ It is meant to be consumed in sequence.
 ### 2.3) Retrospectives
 
 -   Read about the [Retrospective Fundamentals](https://media.pragprog.com/titles/pkretro/fundamentals.pdf) from Pat Kua’s Retrospective Handbook
--   Chapters 1, 2 and 3 of Agile Retrospective by Diana Larsen – (Chapter 1) Helping Your Team Inspect and Adapt
+-   Read chapters 1, 2 and 3 of Agile Retrospective by Diana Larsen
     -   Helping your team inspect and adapt
     -   A retrospective custom-fit to your team
     -   Leading retrospectives
@@ -128,9 +128,9 @@ It is meant to be consumed in sequence.
     -   Chapter 5 Object Oriented programming
 -   Read the article [Keep It DRY, Shy, and Tell the Other Guy](http://media.pragprog.com/articles/may_04_oo1.pdf)
 -   Learn about the Tell Don’t Ask principle
-    -   read the article [Tell, Don’t Ask](http://pragprog.com/articles/tell-dont-ask)
-    -   read the article [The Art of Enbugging](http://media.pragprog.com/articles/jan_03_enbug.pdf)
--   Do the [Kata String Calculator](https://github.com/xpeppers/string-calculator-kata)
+    -   Read the article [Tell, Don’t Ask](http://pragprog.com/articles/tell-dont-ask)
+    -   Read the article [The Art of Enbugging](http://media.pragprog.com/articles/jan_03_enbug.pdf)
+-   Do the [String Calculator kata](https://github.com/xpeppers/string-calculator-kata)
 -   Read these chapters from Clean Code
     
     -   Chapter 6: Objects and Data Structures
@@ -144,7 +144,7 @@ It is meant to be consumed in sequence.
     -   [ISP: Interface Segregation Principle](http://docs.google.com/a/cleancoder.com/viewer?a=v&pid=explorer&chrome=true&srcid=0BwhCYaYDn8EgOTViYjJhYzMtMzYxMC00MzFjLWJjMzYtOGJiMDc5N2JkYmJi&hl=en)
     -   [DIP: Dependency Inversion Principle](http://docs.google.com/a/cleancoder.com/viewer?a=v&pid=explorer&chrome=true&srcid=0BwhCYaYDn8EgMjdlMWIzNGUtZTQ0NC00ZjQ5LTkwYzQtZjRhMDRlNTQ3ZGMz&hl=en)
     -   Exercise: look at the [Racing Car Katas](https://github.com/emilybache/Racing-Car-Katas) (find SOLID violations in the code)
--   Read [Names objects after things, not actions!](http://matteo.vaccari.name/blog/archives/743) by Matteo Vaccari
+-   Read [Name objects after things, not actions!](http://matteo.vaccari.name/blog/archives/743) by Matteo Vaccari
 -   Read about why [You should not use Exceptions for flow control](http://wiki.c2.com/?DontUseExceptionsForFlowControl)
 -   Read [Object Calisthenics](http://williamdurand.fr/2013/06/03/object-calisthenics/) (optional)
 
@@ -155,7 +155,7 @@ It is meant to be consumed in sequence.
     -   Chapter 6 Functional programming
 -   Watch [this video](https://www.youtube.com/watch?v=0if71HOyVjY) about the main concepts of functional programming
 -   Read this article to learn how to use [map, filter and reduce](https://web.mit.edu/6.005/www/fa15/classes/25-map-filter-reduce/) and their benefits
-    -   Try to apply the examples to a few languages like JavaScript, Java, Python, Ruby, Kotlin etc. using their collection API
+    -   Try to apply the examples to a few languages like JavaScript, Java, Python, Ruby, Kotlin etc., using their collection APIs
 -   Read this article about [mutability and immutability](https://web.mit.edu/6.005/www/fa15/classes/09-immutability/)
 -   Read this series of short articles about
     -   [First class functions](https://blog.bitsrc.io/functional-programming-part-1-first-class-functions-791103984dfb)
@@ -179,7 +179,7 @@ It is meant to be consumed in sequence.
     -   8: “Boundaries”
     -   9: “The Three Laws of TDD”
 -   Do the [String calculator Kata](https://osherove.com/tdd-kata-1) with TDD
--   Read these chapters from of Growing Object Oriented Software, Guided by Tests
+-   Read these chapters from Growing Object-Oriented Software, Guided by Tests
     -   Chapter 1: What is the point of Test-Driven Development?
     -   Chapter 2: Test-Driven Development with Objects
     -   Chapter 4: Kick-Starting the Test-Driven Cycle
@@ -204,7 +204,7 @@ It is meant to be consumed in sequence.
 -   Watch [TDD and Software Design](https://www.youtube.com/watch?v=ty3p5VDcoOI)
 -   Read the article [Good Design is Easily-Learned](http://blog.scottbellware.com/2009/01/good-design-is-easily-learned.html)
 -   Read about [The Four Elements of Simple Design](http://www.jbrains.ca/permalink/the-four-elements-of-simple-design)
--   Watch the Clean Code Talks series: these four videos (and the related blogpost series) are really valuable to learn how to design for testability.
+-   Watch the Clean Code Talks series: these four videos (and the related blogpost series) are really valuable for learning how to design for testability.
     
     -   Watch [“The Clean Code Talks – Unit Testing” video](http://www.youtube.com/watch?v=wEhu57pih5w) (~ 30 minutes) \[[slides](https://docs.google.com/presentation/d/1mZsq0WljEfgIR9Df_IcW0VQfNl-Pk_cEBR3i9id-eR4/present#slide=id.i0)\]. Then read [his blogpost](http://misko.hevery.com/2008/11/04/clean-code-talks-unit-testing/).
     

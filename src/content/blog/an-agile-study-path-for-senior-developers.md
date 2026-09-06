@@ -7,19 +7,19 @@ updatedDate: '2023-03-22'
 
 This is a learning path every developer looking to become “senior” can follow.
 
-This path reflects agile culture and values, which have their roots in the [agile manifesto](http://agilemanifesto.org/), as well as in those of XP, and in the [software craftsmanship manifesto](http://manifesto.softwarecraftsmanship.org/).
+This path reflects agile culture and values, which have their roots in the [agile manifesto](http://agilemanifesto.org/), in XP, and in the [software craftsmanship manifesto](http://manifesto.softwarecraftsmanship.org/).
 
-This study path is not meant to teach specific languages and tech stacks: rather it reflects how to builds all sort of software according to reusable agile, clean code and design principles.
+This study path is not meant to teach specific languages and tech stacks: rather, it reflects how to build all sorts of software according to reusable agile, clean code and design principles.
 
-Yes, it is a lot of content. No, you don’t have to have read _all of it_ before you start your career growth to the next level. However, you should at the very least be comfortable explaining each and every topic in this list. If you are not, then that should be considered a **knowledge gap**.
+Yes, it is a lot of content. No, you don’t have to have read _all of it_ before you move up to the next level of your career. However, you should at the very least be comfortable explaining each and every topic in this list. If you are not, then that should be considered a **knowledge gap**.
 
-This study path is adapted from a battle tested one [https://github.com/xpeppers/starway-to-orione](https://github.com/xpeppers/starway-to-orione) and is composed of basic reference literature, articles and videos for each topic. After following this, you should be able to hold your own and provide meaningful references in any conversation with your peers.
+This study path is adapted from a battle-tested one, [https://github.com/xpeppers/starway-to-orione](https://github.com/xpeppers/starway-to-orione), and is composed of basic reference literature, articles and videos for each topic. After following this, you should be able to hold your own and provide meaningful references in any conversation with your peers.
 
 It is meant to be consumed in sequence.
 
 ## 1) Software Architecture
 
--   Read these chapters from Fundamentals of Software Architecture book
+-   Read these chapters from the Fundamentals of Software Architecture book
     -   Preface: Invalidating Axioms
     -   1\. Introduction
     -   I. Foundations
@@ -36,8 +36,8 @@ It is meant to be consumed in sequence.
     -   13 Component Cohesion
     -   14 Component Coupling
 -   Learn about making architecture diagrams with the [C4 model](https://c4model.com/)
--   Be aware of the Gang of Four Design Patterns (skim through this one and make sure to check ones you have never heard of)
--   Be aware of [Enterprise Architecture Patterns](https://ptgmedia.pearsoncmg.com/images/9780321127426/samplepages/9780321127426.pdf) (skim through this one and make sure to check ones you have never heard of)
+-   Be aware of the Gang of Four Design Patterns (skim through this one and make sure to check the ones you have never heard of)
+-   Be aware of [Enterprise Architecture Patterns](https://ptgmedia.pearsoncmg.com/images/9780321127426/samplepages/9780321127426.pdf) (skim through this one and make sure to check the ones you have never heard of)
 
 ### 1.1) Layered architecture
 
@@ -66,17 +66,17 @@ It is meant to be consumed in sequence.
     -   Chapter 3: Model-Driven Design
     -   Chapter 4: Refactoring Toward Deeper Insight
     -   Chapter 5: Preserving Model Integrity
--   If you want to dig deeper read the rest of the book and try
-    -   Implementing Domain Driven Design by Vaugh Vernon
+-   If you want to dig deeper, read the rest of the book and try
+    -   Implementing Domain Driven Design by Vaughn Vernon
     -   Domain Driven Design by Eric Evans
--   Read this article about Martin Fowler about [Bounded Context](http://martinfowler.com/bliki/BoundedContext.html)
+-   Read this article by Martin Fowler about [Bounded Context](http://martinfowler.com/bliki/BoundedContext.html)
 
 ### 1.6) CQRS and Event Sourcing (optional)
 
 -   Read this article on [CQRS by Martin Fowler](http://martinfowler.com/bliki/CQRS.html)
 -   Article on [Event Sourcing by Martin Fowler](http://martinfowler.com/eaaDev/EventSourcing.html)
 -   Watch this video by Greg Young on [CQRS and Event Sourcing](https://www.youtube.com/watch?v=JHGkaShoyNs)
--   Read pages 138 – 163 of Implementing Domain Driven Design by Vaugh Vernon
+-   Read pages 138 – 163 of Implementing Domain Driven Design by Vaughn Vernon
 
 ## 2) Microservices
 
@@ -159,7 +159,7 @@ It is meant to be consumed in sequence.
 ## 5) Quality Strategy
 
 -   Make sure you are familiar with all layers of the [Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html) by Martin Fowler
--   Read also about the [Swiss cheese model](https://blog.korny.info/2020/01/20/the-swiss-cheese-model-and-acceptance-tests.html) and how it relates to the test pyramid
+-   Also read about the [Swiss cheese model](https://blog.korny.info/2020/01/20/the-swiss-cheese-model-and-acceptance-tests.html) and how it relates to the test pyramid
 -   Make sure you are familiar with all kinds of [Microservice testing](http://martinfowler.com/articles/microservice-testing)
 -   Read these articles about the “Shift left” principle
     -   [https://gauge.org/2020/06/24/home-loan-application-user-story/](https://gauge.org/2020/06/24/home-loan-application-user-story/)
@@ -167,11 +167,11 @@ It is meant to be consumed in sequence.
 
 ## 6) Legacy Code
 
--   Read these chapters from Working effectively with Legacy Code
+-   Read these chapters from Working Effectively with Legacy Code
     -   Chapter 1: Changing Software
     -   Chapter 2: Working with Feedback
     -   Chapter 4: The Seam Model
-    -   Chapter 8: How Do I Add a Feature ?
+    -   Chapter 8: How Do I Add a Feature?
     -   Chapter 13: I Need to Make Changes, but I Don’t Know What Tests to Write
     -   Chapter 25: Dependency-Breaking Techniques
 -   Read about covering legacy codebases through [Characterization Tests](https://michaelfeathers.silvrback.com/characterization-testing)

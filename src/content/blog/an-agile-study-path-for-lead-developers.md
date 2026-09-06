@@ -7,13 +7,13 @@ updatedDate: '2023-03-15'
 
 This is a learning path every developer looking to become “tech lead” can follow.
 
-This path reflects agile culture and values, which have their roots in the [agile manifesto](http://agilemanifesto.org/), as well as in those of XP, and in the [software craftsmanship manifesto](http://manifesto.softwarecraftsmanship.org/).
+This path reflects agile culture and values, which have their roots in the [agile manifesto](http://agilemanifesto.org/), in XP, and in the [software craftsmanship manifesto](http://manifesto.softwarecraftsmanship.org/).
 
-This study path is not meant to teach specific languages and tech stacks: rather it reflects how to builds all sort of software according to reusable agile, clean code and design principles.
+This study path is not meant to teach specific languages and tech stacks: rather, it reflects how to build all sorts of software according to reusable agile, clean code and design principles.
 
-Yes, it is a lot of content. No, you don’t have to have read _all of it_ before you start your career growth to the next level. However, you should at the very least be comfortable explaining each and every topic in this list. If you are not, then that should be considered a **knowledge gap**.
+Yes, it is a lot of content. No, you don’t have to have read _all of it_ before you move up to the next level of your career. However, you should at the very least be comfortable explaining each and every topic in this list. If you are not, then that should be considered a **knowledge gap**.
 
-This study path is adapted from a battle tested one [https://github.com/xpeppers/starway-to-orione](https://github.com/xpeppers/starway-to-orione) and is composed of basic reference literature, articles and videos for each topic. After following this, you should be able to hold your own and provide meaningful references in any conversation with your peers.
+This study path is adapted from a battle-tested one, [https://github.com/xpeppers/starway-to-orione](https://github.com/xpeppers/starway-to-orione), and is composed of basic reference literature, articles and videos for each topic. After following this, you should be able to hold your own and provide meaningful references in any conversation with your peers.
 
 It is meant to be consumed in sequence.
 
@@ -21,7 +21,7 @@ It is meant to be consumed in sequence.
 
 ### 1.1) Leading teams
 
--   Read these parts of the the Coaching Agile Teams book
+-   Read these parts of the Coaching Agile Teams book
     -   Part 1: It starts with you
         -   Will I be a good coach?
         -   Expect high performance
@@ -41,18 +41,18 @@ It is meant to be consumed in sequence.
     
     -   3 Understand what motivates each person on your team
     -   4 Drive results collaboratively
--   Do some introspection: browse the archetypes in the [Clifton Strengths References](https://www1.ucdenver.edu/docs/librariesprovider188/learning-development/clifton-strengthsfinder-resource-guide.pdf) (from the [book](https://www.amazon.com/StrengthsFinder-2-0-Tom-Rath/dp/159562015X/ref=sr_1_1)) and reflect on your strengths and the strengths of your team mates
+-   Do some introspection: browse the archetypes in the [Clifton Strengths References](https://www1.ucdenver.edu/docs/librariesprovider188/learning-development/clifton-strengthsfinder-resource-guide.pdf) (from the [book](https://www.amazon.com/StrengthsFinder-2-0-Tom-Rath/dp/159562015X/ref=sr_1_1)) and reflect on your strengths and the strengths of your teammates
 -   Learn about [different styles of delegation](https://www.leadershipforces.com/art-delegation/)
 -   Learn about leadership time management using the [Eisenhower Box](https://jamesclear.com/eisenhower-box)
--   Read some first hand experiences from Pat Kua’s Talking with Tech Leads (optional)
+-   Read some first-hand experiences from Pat Kua’s Talking with Tech Leads (optional)
 
 ### 1.2) Structuring teams
 
--   Read these series of articles by Sriram Narayan on
+-   Read this series of articles by Sriram Narayan on
     -   [Activity oriented teams](https://martinfowler.com/bliki/ActivityOriented.html)
     -   [Outcome oriented teams](https://martinfowler.com/bliki/OutcomeOriented.html)
     -   [Business capability centric teams](https://martinfowler.com/bliki/BusinessCapabilityCentric.html)
--   Read this article by Martin Fowler to learn the difference between [Product and Projects](https://martinfowler.com/articles/products-over-projects.html)
+-   Read this article by Martin Fowler to learn the difference between [products and projects](https://martinfowler.com/articles/products-over-projects.html)
 -   Read the book [Team topologies](https://teamtopologies.com/), or alternatively learn about the basic concepts on [this section of the authors’ website](https://teamtopologies.com/key-concepts)
 -   Read this article about [Conway’s Law](https://martinfowler.com/bliki/ConwaysLaw.html)
 -   Learn about [Brook’s law](https://www.leadingagile.com/2018/02/lines-of-communication-team-size-applying-brooks-law/)
@@ -98,7 +98,7 @@ It is meant to be consumed in sequence.
 
 ## 3) Building production-ready applications
 
-### 3.2) Building for production
+### 3.1) Building for production
 
 -   Read these parts from Release It!: Design and Deploy Production-Ready Software
     -   Introduction
@@ -118,7 +118,7 @@ It is meant to be consumed in sequence.
         -   Availability
         -   Administration
     -   Operations
-        -   Phoenomenal cosmic powers, itty-bitty living space
+        -   Phenomenal cosmic powers, itty-bitty living space
         -   Transparency
         -   Adaptation
 -   Read these parts from Google’s [SRE Book](https://sre.google/sre-book/table-of-contents/)
@@ -150,7 +150,7 @@ It is meant to be consumed in sequence.
         -   Chapter 26 – Data Integrity: What You Read Is What You Wrote
         -   Chapter 27 – Reliable Product Launches at Scale
 
--   Make sure you are familiar with (or at least have heard of) all the patterns from the book [Patterns of Enterprise](https://www.amazon.com/Patterns-Enterprise-Application-Architecture-Martin/dp/0321127420) Application Architecture, which you can also find in [this catalog](https://www.martinfowler.com/eaaCatalog/)
+-   Make sure you are familiar with (or at least have heard of) all the patterns from the book [Patterns of Enterprise Application Architecture](https://www.amazon.com/Patterns-Enterprise-Application-Architecture-Martin/dp/0321127420), which you can also find in [this catalog](https://www.martinfowler.com/eaaCatalog/)
 
 ### 3.2) CFRs
 
