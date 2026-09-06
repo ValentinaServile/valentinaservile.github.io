@@ -8,7 +8,7 @@ categories: ['JavaScript', 'Networking', 'Snippets']
 
 This will start a simple server on port 3000.
 
-Save to a file `index.js`
+Save to a file `index.js`:
 
 ```js
 var http = require('http');

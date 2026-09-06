@@ -1,12 +1,12 @@
 ---
 title: 'The same code with Callbacks vs Promises vs Async/Await'
-description: 'Sometimes in JavaScript to have to deal with different flavours of asynchronous code, so it is handy to be able to map back and forth between them.'
+description: 'Sometimes in JavaScript you have to deal with different flavours of asynchronous code, so it is handy to be able to map back and forth between them.'
 pubDate: '2021-02-13'
 updatedDate: '2022-09-30'
 categories: ['JavaScript', 'Snippets']
 ---
 
-Sometimes in JavaScript to have to deal with different flavours of asynchronous code, so it is handy to be able to map back and forth between them.
+Sometimes in JavaScript you have to deal with different flavours of asynchronous code, so it is handy to be able to map back and forth between them.
 
 ### Callback
 
@@ -29,7 +29,7 @@ const main = () => {
 };
 ```
 
-However, things may quickly get out of hand if we need the result of an asynchronous function to invoke another asynchronous function, and then we need that to invoke another one and so on…:
+However, things may quickly get out of hand if we need the result of an asynchronous function to invoke another asynchronous function, and then we need that to invoke another one, and so on:
 
 ```js
 const main = () => {
@@ -45,7 +45,7 @@ const main = () => {
 
 ### Promise
 
-We can use Promises to solve the indentation mess above. For example, this is how we might change our `main` function if we want to wrap the `myAsyncFunction` in a promise
+We can use Promises to solve the indentation mess above. For example, this is how we might change our `main` function if we want to wrap `myAsyncFunction` in a promise:
 
 ```js
 const main = () => {
@@ -66,9 +66,9 @@ const main = () => {
 };
 ```
 
-Promises can be chained, so now we don’t have to use nesting in order to use the result of an asynchronous operation:
+Promises can be chained, so now we don’t have to nest in order to use the result of an asynchronous operation:
 
-```
+```js
 const main = () => {
 
    //...
@@ -105,7 +105,7 @@ const main = async () => {
 
 _(Remember to change the `main` function to be async!)_
 
-This way the code can look much more similar to synchronous code
+This way the code can look much more similar to synchronous code:
 
 ```js
 const main = async () => {

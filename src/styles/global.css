@@ -353,6 +353,20 @@ textarea {
 	}
 }
 
+/* Video embeds. Sized by aspect-ratio rather than fixed dimensions, and lifted above
+   the scanlines like content images — the CRT stripes are decoration for the page, not
+   something to lay over a picture someone is trying to watch. */
+.prose .video {
+	display: block;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	height: auto;
+	margin: 0 0 1.6em 0;
+	border: 1px solid var(--line);
+	position: relative;
+	z-index: 310;
+}
+
 /* ---------- focus / keyboard ---------- */
 
 :focus-visible {

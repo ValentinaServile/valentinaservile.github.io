@@ -11,7 +11,7 @@ Here is a quick snippet I use all the time when I want to set up an HTTP server 
 This is the command:
 
 ```shell
-$ while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; echo "Hello World"} | nc -l 3000; done
+$ while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; echo "Hello World"; } | nc -l 3000; done
 ```
 
 _Warning: this will block your current terminal._
@@ -25,9 +25,13 @@ User-Agent: curl/7.54.0
 Accept: */*
 ```
 
-If you want your terminal back, or for any other reason want to put the command in the background while it is running, simply press `ctrl+z`.
+If you want your terminal back, or for any other reason want to put the command in the background while it is running, press `ctrl+z` to suspend it and then `bg` to resume it in the background:
 
-When you are done and want to kill the background process, you can do so with
+```shell
+$ bg
+```
+
+When you are done and want to kill the background process, you can do so with:
 
 ```shell
 $ kill %1

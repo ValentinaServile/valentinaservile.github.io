@@ -6,19 +6,19 @@ updatedDate: '2021-02-13'
 categories: ['Networking', 'Snippets', 'Unix']
 ---
 
-Much like how the `authorized_keys` file is used to authenticate clients on the server, there is another file in the `~/.ssh` folder called `known_hosts`, which is used to authenticate servers to the client.
+Much like how the `authorized_keys` file is used to authenticate clients on the server, there is another file in the `~/.ssh` folder called `known_hosts`, which is used to authenticate servers to the client.
 
-Whenever SSH is configured on a new server it always generates a public and private key pair for the server, just like you did for your user in the previous section. Every time you connect to any SSH server, it shows you its public key first, together with a proof that it possesses the corresponding private key. If you do not have its public key yet, then your computer will ask for it and add it into the `known_hosts` file. 
+Whenever SSH is configured on a new server it always generates a public and private key pair for the server, just like you did for your user in the [Authentication](/blog/ssh-authentication-methods/) post. Every time you connect to any SSH server, it shows you its public key first, together with a proof that it possesses the corresponding private key. If you do not have its public key yet, then your computer will ask for it and add it into the `known_hosts` file.
 
 ![](../../assets/blog/ssh-known-hosts/image-4.png)
 
-This way, the client can check that the server is a known one, and not some rogue server trying to pass off as the right one.
+This way, the client can check that the server is a known one, and not some rogue server trying to pass itself off as the right one.
 
 That’s why when you connect to a server for the first time, you might get a message like this:
 
 ```
 $ ssh myuser@myserver
-The authenticity of host 'myserver (192.0.2.103)' can’t be
+The authenticity of host 'myserver (192.0.2.103)' can't be
 established. ECDSA key fingerprint is ...
 Are you sure you want to continue connecting (yes/no)? yes
 Warning: Permanently added 'myserver,192.0.2.103' (ECDSA) to the list of known hosts.
@@ -44,17 +44,17 @@ RSA host key for 192.168.219.149 has changed and you have requested strict check
 Host key verification failed.
 ```
 
-You might get this message, informing you that the server you are speaking to might not be who you think it is, and you might be the victim of a Man in the Middle attack.
+You might get this message, informing you that the server you are speaking to might not be who you think it is, and you might be the victim of a man-in-the-middle attack.
 
 However, there are also legitimate reasons for your server’s identification to have changed. Maybe the SSH software was upgraded, or the machine behind that IP address has died and another one has taken its place (a common occurrence when developing in a cloud environment).
 
 If you have identified that the change happened for a good reason, all you need to do is remove the line with the outdated public key from the `~/.ssh/known_hosts` file manually, or with this handy command:
 
 ```shell
- $ ssh-keygen -R <hostname or IP address>
+$ ssh-keygen -R <hostname or IP address>
 ```
 
-And the client will magically forget it ever knew who that server was, allowing to connect once again.
+And the client will magically forget it ever knew who that server was, allowing you to connect once again.
 
 ### [Next: SSH Agent →](/blog/ssh-agent/)
 

@@ -1,20 +1,20 @@
 ---
 title: 'Serializing and de-serializing ES6 class instances recursively'
-description: 'We have all been warned not to use ES6 classes. Perhaps by our colleagues, or perhaps by the endless amount of scary blog posts that show up if you dare Google the subject.'
+description: 'We have all been warned not to use ES6 classes. Perhaps by our colleagues, or perhaps by the endless number of scary blog posts that show up if you dare Google the subject.'
 pubDate: '2022-09-30'
 categories: ['JavaScript', 'Snippets']
 tags: ['es6', 'javascript', 'types']
 ---
 
-We have all been warned not to use ES6 classes. Perhaps by our colleagues, or perhaps by the endless amount of scary blog posts that show up if you dare Google the subject. However, if you thought you had a use case for them you might have used them anyway (or perhaps you are in too deep and cannot rewrite your entire codebase). And now you stumbled upon this serialization problem and need to quickly find a solution that isn’t “just use TypeScript instead”.
+We have all been warned not to use ES6 classes. Perhaps by our colleagues, or perhaps by the endless amount of scary blog posts that show up if you dare Google the subject. However, if you thought you had a use case for them you might have used them anyway (or perhaps you are in too deep and cannot rewrite your entire codebase). And now you have stumbled upon this serialization problem and need to quickly find a solution that isn’t “just use TypeScript instead”.
 
-The gist of it is: JavaScript is not a typed language, although sometimes it is pretending to be. When we make use of type-y features like classes and interfaces, some behaviors might occur that are be a bit puzzling if you are coming from, say, Java or Kotlin. One such behavior is how class instances get converted to and from JSON.
+The gist of it is: JavaScript is not a typed language, even if it sometimes pretends to be. When we make use of type-y features like classes and interfaces, some behaviors might occur that can be a bit puzzling if you are coming from, say, Java or Kotlin. One such behavior is how class instances get converted to and from JSON.
 
 Or rather, how they **don’t**.
 
 ## The problem with JavaScript classes and serialization
 
-Imagine we have a class in our code
+Imagine we have a class in our code:
 
 ```js
 class MyClass {
@@ -37,10 +37,10 @@ Code:
 import MyClass from "./MyClass.js"
 
 const instance = new MyClass();
-object.myField = "123"
+instance.myField = "123"
 
 const json = JSON.stringify(instance)
-console.log(object)
+console.log(json)
 ```
 
 Output:
@@ -67,9 +67,9 @@ Output:
 Uncaught TypeError: instance.doThing is not a function
 ```
 
-We get this error because the JSON was deserialized into a plain JavaScript object, as JavaScript didn’t know any better and cannot distinguish between a simple object and what should be an instance of a class.
+We get this error because the JSON was deserialized into a plain JavaScript object, as JavaScript doesn’t know any better and cannot distinguish between a simple object and what should be an instance of a class.
 
-In a properly typed language like Java, we would be able to tell the JSON reader which class we want to use as a base
+In a properly typed language like Java, we would be able to tell the JSON reader which class we want to use as a base:
 
 ```java
 ObjectMapper mapper = new ObjectMapper();
@@ -83,7 +83,7 @@ But JavaScript is _not_ a properly typed language, even if it does have classes,
 
 ## The solution (simple)
 
-Not all is lost. In order to “cast” our plain JavaScript object to an instance of our class, we can use `Object.assign` like this
+Not all is lost. In order to “cast” our plain JavaScript object to an instance of our class, we can use `Object.assign` like this:
 
 Code:
 
@@ -140,7 +140,7 @@ class MyOtherClass {
 export default MyOtherClass;
 ```
 
-Let’s try to serialize and deserialize using the previous solution and see what happens to the instance of `MyOtherClass`
+Let’s try to serialize and deserialize using the previous solution and see what happens to the instance of `MyOtherClass`:
 
 Code:
 
@@ -149,10 +149,10 @@ import MyClass from "./MyClass.js"
 import MyOtherClass from "./MyOtherClass.js"
 
 const originalInstance = new MyClass();
-object.myField = "123"
-object.myClassField = new MyOtherClass();
+originalInstance.myField = "123"
+originalInstance.myClassField = new MyOtherClass();
 
-const json = JSON.stringify(instance)
+const json = JSON.stringify(originalInstance)
 
 const deserialized = JSON.parse(json);
 
@@ -217,18 +217,19 @@ function deserialize (jsonString) {
 
 The deserialize function will read the `__type` property for each node, dynamically create an instance of that type and perform the `Object.assign` operation on it.
 
-Note that the `__type` fields gets removed so that the calling code can remain unaware of the implementation details of our serialization.
+Note that the `__type` field gets removed so that the calling code can remain unaware of the implementation details of our serialization.
 
 ### Limitations
 
-This approach works, but it has some important limitations
+This approach works, but it has some important limitations:
 
 -   Our JSON output will be “polluted” with the extra field
 -   All constructors in our classes need to be able to accept no parameters, as they will be called without arguments during deserialization
 -   Perhaps most importantly, we need to keep track of all of the classes that we are using in a list for deserialization. This makes our code more fragile: if we introduce a new class and forget to update the list then the implementation will break.
+-   `serialize` mutates the instance it is given: the `__type` property it adds stays on the original object after the call. `deserialize` strips it from the object it returns, so a round trip comes back clean, but anything still holding the original instance will see the extra field.
 
 ## Conclusion
 
-Yes, unfortunately after quite a lot of research this (rather complicated) solution is the best one I found. It is not ideal but at least it encapsulates the problem and allows to work with classes and JSON.
+Yes, unfortunately after quite a lot of research this (rather complicated) solution is the best one I found. It is not ideal, but at least it encapsulates the problem and allows us to work with classes and JSON.
 
 Let me know in the comments if you found anything better.
