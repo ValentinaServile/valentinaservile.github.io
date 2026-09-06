@@ -16,6 +16,14 @@ interface Props {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const { title, description, image = FallbackImage } = Astro.props;
+
+// Google Analytics. Only in a production build: local `astro dev` traffic would
+// otherwise show up in the reports as real visits.
+const GA_ID = 'G-0R518DX5NY';
+const GA_CONFIG = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`;
 ---
 
 <!-- Global Metadata -->
@@ -52,3 +60,13 @@ const { title, description, image = FallbackImage } = Astro.props;
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
+
+<!-- Google tag (gtag.js) — is:inline keeps Astro from bundling a third-party script -->
+{
+	import.meta.env.PROD && (
+		<Fragment>
+			<script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+			<script is:inline set:html={GA_CONFIG} />
+		</Fragment>
+	)
+}

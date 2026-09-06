@@ -34,10 +34,16 @@ We are column 2, typeset with column 1's font.
    *component libraries* (98.css, NES.css, 8bitcn/ui) were rejected too: they solve an
    **app's** problem — buttons, dialogs, tabs — while a blog is ~90% prose typography,
    which those libraries don't style and actively fight.
-2. **Ship as close to zero JavaScript as possible.** Current total: **932 bytes** of
+2. **Ship as close to zero JavaScript as possible.** Our own total: **932 bytes** of
    inlined script for keyboard nav on every page, plus **1.6 KB on the homepage only**
    for the error popups (§9). `dist/` contains no `.js` files at all — Astro inlines
    scripts that small directly into each HTML page. A post page is still 932 bytes.
+
+   The one exception is **Google Analytics** (`gtag.js`), loaded `async` from Google in
+   `BaseHead.astro` and therefore on every page. It dwarfs everything we wrote, and it
+   is the only third-party request the site makes. It is gated on `import.meta.env.PROD`
+   so `astro dev` traffic never reaches the reports; the two tags are `is:inline` so
+   Astro leaves them alone rather than trying to bundle them.
 3. **Everything is CSS.** No images are used for decoration. The horizon glow, the grid,
    the scanlines, the dialog chrome and the text glow are all gradients and
    pseudo-elements. Nothing to download,
