@@ -1,6 +1,6 @@
 ---
 title: 'SSH Agent'
-description: 'If you are using key-pair-based authentication with a passphrase for your keys, things can quickly get tedious as you have to input the passphrase every time you want to connect somewhere.'
+description: 'Type your passphrase once: what ssh-agent does, how to add and remove keys, and why it has to be a separate process.'
 pubDate: '2021-01-31'
 updatedDate: '2021-02-02'
 categories: ['Networking', 'Snippets', 'Unix']
@@ -40,10 +40,7 @@ $ ssh-add -d ~/.ssh/key_name_id_rsa
 
 **_Why is the `ssh-agent` a separate program?_**
 
-Keys that are protected with a passphrase are stored in encrypted form, so they have to be temporarily put somewhere unencrypted if they are to be reused without entering the passphrase again.  
-The most secure place to store them in unencrypted form is program memory, and in Unix-like operating systems, memory is normally associated with a process.  
-A normal SSH client process cannot be used to store the unencrypted key because SSH client processes only last the duration of a remote login session. Therefore, users run a program called `ssh-agent` that runs beyond the duration of a local login session, stores unencrypted keys in memory, and communicates with SSH clients using a Unix domain socket.  
-SSH knows the location of the socket through the `$SSH_AUTH_SOCK` variable.
+Keys that are protected with a passphrase are stored in encrypted form, so they have to be temporarily put somewhere unencrypted if they are to be reused without entering the passphrase again. The most secure place to store them in unencrypted form is program memory, and in Unix-like operating systems, memory is normally associated with a process. A normal SSH client process cannot be used to store the unencrypted key because SSH client processes only last the duration of a remote login session. Therefore, users run a program called `ssh-agent` that runs beyond the duration of a local login session, stores unencrypted keys in memory, and communicates with SSH clients using a Unix domain socket. SSH knows the location of the socket through the `$SSH_AUTH_SOCK` variable.
 
 See the [man page](https://man7.org/linux/man-pages/man1/ssh-agent.1.html) and [SSH agent protocol](https://tools.ietf.org/html/draft-miller-ssh-agent-04) for more info.
 

@@ -1,6 +1,6 @@
 ---
 title: 'Solving the Docker in Docker dilemma in your CI Pipeline'
-description: 'Most modern test suites contain some tests (integration, end-to-end, component…) that rely on external resources in order to run.'
+description: 'Your tests need containers and your CI agent already is one. Docker in Docker versus sharing the host’s docker.sock, and what each one costs.'
 pubDate: '2021-02-14'
 updatedDate: '2022-09-30'
 categories: ['CI/CD', 'Docker']
@@ -19,8 +19,7 @@ It gets trickier in the team’s CI pipeline, because a lot of modern CI/CD tool
 
 It used to be impossible to run Docker inside Docker, because some of the low-level black magic Docker needs in order to run isn’t available in an underprivileged environment like a container.
 
-All of that changed with [this update](https://www.docker.com/blog/docker-can-now-run-within-docker/), which introduced the concept of privileged mode, where a container can effectively be run with almost all the capabilities of the host machine.  
-You can leverage privileged mode to create a container that is able to spawn other containers (particularly, you will want to run your agent image in this way).
+All of that changed with [this update](https://www.docker.com/blog/docker-can-now-run-within-docker/), which introduced the concept of privileged mode, where a container can effectively be run with almost all the capabilities of the host machine. You can leverage privileged mode to create a container that is able to spawn other containers (particularly, you will want to run your agent image in this way).
 
 You can do so by adding the `--privileged` flag like this:
 
@@ -58,8 +57,8 @@ However simple it looks, this approach presents some undesired complications:
 
 ![](../../assets/blog/solving-the-docker-in-docker-dilemma-in-your-ci-pipeline/image-19.png)
 
-For most pipelines there is no real need to have the Docker containers used for tests running _within_ the agent container.  
-The requirement most often is just to be able to _start_ a Docker container from some test code running within the agent, but then the container could theoretically run anywhere that can be reached by our application for the purpose of our tests.  
+For most pipelines there is no real need to have the Docker containers used for tests running _within_ the agent container. The requirement most often is just to be able to _start_ a Docker container from some test code running within the agent, but then the container could theoretically run anywhere that can be reached by our application for the purpose of our tests.
+
 For this reason, another possible setup for our pipeline is Docker **beside** Docker, instead of Docker within Docker.
 
 We can achieve this setup by sharing the UNIX socket file used by Docker as a volume inside the agent container. In order to understand how this works, let’s first go through a high-level refresher of the Docker architecture.
@@ -105,14 +104,13 @@ services:
 
 #### Running the tests
 
-Unfortunately, unlike the previous solution, we must now take into account that the container we are talking to is not a child of the current one.  
-Therefore, any network setup that relies on that being the case will not work anymore.  
+Unfortunately, unlike the previous solution, we must now take into account that the container we are talking to is not a child of the current one. Therefore, any network setup that relies on that being the case will not work anymore.
+
 As an example, locally and in the previous solution we might have been running our tests against `localhost:port` by making use of the port forwarding feature like this:
 
 ![](../../assets/blog/solving-the-docker-in-docker-dilemma-in-your-ci-pipeline/image-27.png)
 
-However, when the daemon is shared, the same port forwarding will actually refer to the host’s view of “localhost”, not the agent’s.  
-Therefore we have to rethink our approach and refer to the container by its IP address instead:
+However, when the daemon is shared, the same port forwarding will actually refer to the host’s view of “localhost”, not the agent’s. Therefore we have to rethink our approach and refer to the container by its IP address instead:
 
 ![](../../assets/blog/solving-the-docker-in-docker-dilemma-in-your-ci-pipeline/image-28.png)
 
@@ -138,7 +136,7 @@ $ docker network connect <database-network-name> <agent-container-name>
 
 We should then be able to refer to the database container via its container name in our tests, like `my-db:<port>`. This is especially convenient when using docker-compose as we have the network already sorted out for us, with predictable default container names.
 
-  
+
 More details on DNS resolution and container networking in the [official documentation](https://docs.docker.com/network/bridge/).
 
 ## Conclusion

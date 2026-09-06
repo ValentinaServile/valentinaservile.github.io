@@ -1,14 +1,12 @@
 ---
 title: 'SSH Tunnelling and Port Forwarding'
-description: 'In the previous section we saw how to make use of a jump host as a proxy to run commands into a remote machine.'
+description: 'Local, remote and dynamic port forwarding: carrying traffic through an SSH channel to reach what the network will not let you reach directly.'
 pubDate: '2021-01-31'
 updatedDate: '2021-02-13'
 categories: ['Networking', 'Snippets', 'Unix']
 ---
 
-In the [Jumping Hosts](/blog/jumping-ssh-hosts/) post we saw how to make use of a jump host as a proxy to run commands on a remote machine.  
-Sometimes, however, having a shell is not necessary, and the connectivity aspect of having a secure channel to the remote host is way more interesting.  
-SSH’s port forwarding feature allows us to create a secure channel to the remote host, and then use it to carry any type of traffic back and forth.
+In the [Jumping Hosts](/blog/jumping-ssh-hosts/) post we saw how to make use of a jump host as a proxy to run commands on a remote machine. Sometimes, however, having a shell is not necessary, and the connectivity aspect of having a secure channel to the remote host is way more interesting. SSH’s port forwarding feature allows us to create a secure channel to the remote host, and then use it to carry any type of traffic back and forth.
 
 #### Local Port Forwarding
 
@@ -26,8 +24,7 @@ This is similar to what the `ProxyCommand` in the [Jumping Hosts](/blog/jumping-
 $ ssh -i ~/.ssh/jump_id_rsa -L 8888:server:5432 user@jump-host
 ```
 
-In our case we have forwarded port 8888 of our machine to port 5432 of the remote server running PostgreSQL.  
-We can now reach the database on the private subnet through port 8888 on localhost, e.g.:
+In our case we have forwarded port 8888 of our machine to port 5432 of the remote server running PostgreSQL. We can now reach the database on the private subnet through port 8888 on localhost, e.g.:
 
 ```shell
 $ psql -W -h localhost -p 8888 postgres postgres
@@ -41,15 +38,13 @@ Scenario: you want the remote server to access a specific application running on
 
 For example (as in the image) we might want the remote server to be able to visit a page served by a webserver running on our laptop.
 
-The `-R` option is used to tell SSH that it should forward traffic from any port on the remote machine through the jump host and to a port on our local machine.  
-It works exactly like local port forwarding, only the other way around: the SSH daemon will allocate a socket to listen on the port on the remote side.
+The `-R` option is used to tell SSH that it should forward traffic from any port on the remote machine through the jump host and to a port on our local machine. It works exactly like local port forwarding, only the other way around: the SSH daemon will allocate a socket to listen on the port on the remote side.
 
 ```shell
 $ ssh -i ~/.ssh/jump_id_rsa -R 8080:localhost:8888 user@jump-host
 ```
 
-In our case we have forwarded port 8080 of the server to port 8888 of our local machine, where a webserver is running.  
-We can now request a page from the remote server by running, for example:
+In our case we have forwarded port 8080 of the server to port 8888 of our local machine, where a webserver is running. We can now request a page from the remote server by running, for example:
 
 ```shell
 $ wget http://localhost:8080/path/to/resource
@@ -69,8 +64,7 @@ Luckily the `-D` flag allows you to turn your SSH client into a rudimentary SOCK
 $ ssh -i ~/.ssh/jump_id_rsa -D 8888 user@jump-host
 ```
 
-This creates a SOCKS proxy on port 8888. You can configure your browser, for example, to send its traffic through a SOCKS tunnel using [this guide](https://linuxize.com/post/how-to-setup-ssh-socks-tunnel-for-private-browsing/).  
-You can now reach the entire network of servers through port 8888 (you can send any type of traffic, directed to any port on any host).
+This creates a SOCKS proxy on port 8888. You can configure your browser, for example, to send its traffic through a SOCKS tunnel using [this guide](https://linuxize.com/post/how-to-setup-ssh-socks-tunnel-for-private-browsing/). You can now reach the entire network of servers through port 8888 (you can send any type of traffic, directed to any port on any host).
 
 _This is different from a VPN because it does not intercept all traffic, and each application that wishes to use the proxy has to explicitly route the traffic to the local port._
 

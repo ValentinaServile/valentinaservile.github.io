@@ -1,0 +1,143 @@
+---
+/**
+ * "On this page" index, generated from the post's own headings.
+ *
+ * Astro hands us the headings it parsed out of the Markdown, so this can never drift
+ * from the content the way a hand-written list would. Nothing is added to the posts
+ * themselves; a new section shows up here as soon as it is written.
+ *
+ * It is deliberately absent from short posts — a table of contents over a two-command
+ * snippet is noise. See the thresholds below.
+ */
+
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+	headings: MarkdownHeading[];
+	/** Body word count, used to keep the TOC off short posts. */
+	words: number;
+}
+
+const { headings, words } = Astro.props;
+
+/** Series navigation and the series index are headings too, but not sections. */
+const NAVIGATION = /^(next:|←|→|table of contents)/i;
+
+// Every heading here comes from the Markdown body; the page's own <h1> is the title,
+// rendered by the layout, so `#` in a post is a section heading like any other.
+const sections = headings.filter((h) => !NAVIGATION.test(h.text.trim()));
+
+// Every heading level is listed, however deep the post goes. Heading levels are
+// inconsistent across posts (a WordPress inheritance) — some start at `##`, others at
+// `####` — so indentation is relative to the shallowest level actually present rather
+// than to the tag itself.
+const top = sections.length ? Math.min(...sections.map((h) => h.depth)) : 0;
+
+const show = sections.length >= 3 && words >= 500;
+---
+
+{
+	show && (
+		<nav class="toc" aria-labelledby="toc-label">
+			<p class="toc-label" id="toc-label">
+				On this page
+			</p>
+			<ol>
+				{sections.map((h) => (
+					<li style={`--level:${h.depth - top}`} class:list={{ sub: h.depth > top }}>
+						<a href={`#${h.slug}`}>{h.text}</a>
+					</li>
+				))}
+			</ol>
+		</nav>
+	)
+}
+
+<style>
+	.toc {
+		position: relative;
+		margin: 0 0 2.8em 0;
+		padding: 1.1em 1.4em 1.3em 1.7em;
+		border: 1px solid var(--line);
+		overflow: hidden;
+		/* Two corner washes over the panel fill: magenta coming in from the top left,
+		   cyan from the bottom right. Both are faint — this is a signpost, not artwork,
+		   and the links have to stay the brightest thing in the box. */
+		background:
+			radial-gradient(
+				ellipse 75% 95% at 0% 0%,
+				color-mix(in srgb, var(--neon-magenta) 13%, transparent),
+				transparent 70%
+			),
+			radial-gradient(
+				ellipse 65% 85% at 100% 100%,
+				color-mix(in srgb, var(--neon-cyan) 10%, transparent),
+				transparent 70%
+			),
+			var(--panel);
+	}
+
+	/* The same neon ramp as the header underline and the footer rule, turned on its
+	   side. Reusing it ties the block to the page furniture instead of inventing a
+	   third gradient. */
+	.toc::before {
+		content: '';
+		position: absolute;
+		inset: 0 auto 0 0;
+		width: 2px;
+		background: linear-gradient(180deg, var(--neon-magenta), var(--purple), var(--neon-cyan));
+	}
+
+	.toc-label {
+		margin: 0 0 0.7em 0;
+		color: var(--dim);
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+	/* the global `//` prefix belongs to headings; this is a label, not a section */
+	.toc-label::before {
+		content: '// ';
+		color: var(--purple);
+	}
+
+	.toc ol {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		font-size: 0.85rem;
+	}
+
+	.toc li {
+		margin: 0.15em 0;
+		/* one step of indent per heading level below the shallowest one in the post */
+		padding-left: calc(1.1em + var(--level, 0) * 1.4em);
+		text-indent: -1.1em;
+	}
+	/* `ul li::marker { content: '▸ ' }` in global.css survives `list-style: none`,
+	   so it has to be turned off explicitly — same trap as the post list. */
+	.toc li::marker {
+		content: none;
+	}
+	.toc li::before {
+		content: '▸ ';
+		color: var(--purple);
+	}
+
+	.toc li.sub {
+		color: var(--dim);
+	}
+	.toc li.sub::before {
+		content: '· ';
+	}
+
+	.toc a {
+		color: var(--blue);
+		text-decoration: none;
+	}
+	.toc a:hover {
+		color: var(--blue-soft);
+		text-decoration: underline;
+	}
+</style>

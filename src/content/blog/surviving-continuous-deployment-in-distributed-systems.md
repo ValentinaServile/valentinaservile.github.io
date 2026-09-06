@@ -1,6 +1,6 @@
 ---
 title: 'Surviving Continuous Deployment in Distributed Systems'
-description: 'Note: a shorter, summarised version of this article has been published on the Thoughtworks blog. Read the full article here or watch the talk delivered at XConf Europe: Introduction This is an…'
+description: 'When every commit goes straight to production, the order you write code in starts to matter. Feature toggles, expand and contract, and double writes.'
 pubDate: '2021-07-30'
 updatedDate: '2022-09-30'
 categories: ['Agile', 'CI/CD', 'Extreme Programming', 'Refactoring', 'Software Architecture']
@@ -64,7 +64,7 @@ It sure seems scary, but the one-commit = one-deploy workflow can drastically im
 
 From this moment on, all of the concepts will be demonstrated using an example application.
 
-  
+
 We shall call it the “Animal Shelter Management System”, and it does exactly what the name says: allows animal shelter employees to manage every aspect of the life of their animal guests.  
 
 It even has a fancy, modern UI:
@@ -92,15 +92,14 @@ We will also assume that this application is already live, and it is being enjoy
 When talking about distributed systems, we are used to thinking about contracts and everything that goes with them in the context of our system (and our team) versus the outside world.
 
 For example, our API (consumer) might rely on a third party system to perform some task (producer), or vice versa. Every time we need a new feature or there is a change proposal our developers will need to interface with the people responsible for the outside system.  
-  
+
 These situations have been described extensively in the literature, and most organisations already have processes in place to deal with them, whether the third party is another team or a vendor.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-1.png)
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-2.png)
 
-We don’t think that explicitly about contracts, however, when any given system which we would normally consider a “unit”, or a “microservice” has distributed sub-components within itself. We have distributed components the very moment that any sort of inter-process communication happens (over the network, using files, pipes, sockets etc.).  
-Most non-trivial systems respect this definition.
+We don’t think that explicitly about contracts, however, when any given system which we would normally consider a “unit”, or a “microservice” has distributed sub-components within itself. We have distributed components the very moment that any sort of inter-process communication happens (over the network, using files, pipes, sockets etc.). Most non-trivial systems respect this definition.
 
 Our Animal Shelter Management System is no exception, of course, having lots of obviously distributed bits and pieces: the persistence, API and UI are all talking to each other over the network.
 
@@ -111,7 +110,7 @@ And contracts certainly exist between them too: the UI consumes the API and expe
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-4.png)
 
 Why does this matter?  
-  
+
 Because any given task a developer starts can span across multiple of these distributed sub-components. If we have split our stories right, in fact, the developers will deliver features end to end by design. This is different than when there needs to be outward-facing communication: as the components are all owned by the same team, there is no process and certainly no meetings around making sure all changes are retro-compatible and happen in the right order between producer and consumer.
 
 So how have developers been dealing with it?
@@ -119,17 +118,16 @@ So how have developers been dealing with it?
 ## Order of Deployment
 
 From my experience, when deployment to production is not happening every commit, dependencies between producers and consumers are usually managed by manually releasing each system’s changes in the correct order by the developers themselves (assuming we are in a cross-functional team). This means that anyone who picks up a task can mindlessly start working on whichever codebase they wish, as all of their changes will be waiting to be released correctly by humans clicking buttons.  
-  
+
 Or, we can say, code changes go live in their **order of deployment**.  
-  
+
 See the example below of a change spanning backend and frontend, in which the developers can start with the frontend (which would not do anything useful without the underlying API) but then they can make sure to release in the reverse order.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-8.png)
 
 ## Order of Development
 
-Now imagine that the gate to production (and the human) have been removed. Suddenly changes don’t stop in  
-some staging environment: they immediately get released.  
+Now imagine that the gate to production (and the human) have been removed. Suddenly changes don’t stop in some staging environment: they immediately get released.  
 
 Or, features go live in their **order of development**.  
 
@@ -141,9 +139,9 @@ The only way to avoid these situations (without any extra practices) is to make 
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-10.png)
 
-This is a substantial change from the past: developers used to be able to pick a new task and just start _somewhere_, maybe on the codebase they are most comfortable with or with the first change that comes to mind.  
-Now it’s not enough to be able to know in advance which component needs changing and how, but also there needs to be a conscious decision and planning of all code changes going live at the granularity of individual commits.  
-So, quite a lot of preparation is needed just start typing.
+This is a substantial change from the past: developers used to be able to pick a new task and just start _somewhere_, maybe on the codebase they are most comfortable with or with the first change that comes to mind.
+
+Now it’s not enough to be able to know in advance which component needs changing and how, but also there needs to be a conscious decision and planning of all code changes going live at the granularity of individual commits. So, quite a lot of preparation is needed just to start typing.
 
 In the following sections we’ll see how it’s possible to deal with (or remove) some of this planning overhead by following different approaches based on the type of code change being introduced:
 
@@ -237,7 +235,8 @@ class UserController {
 }
 ```
 
-**Persistence**  
+**Persistence**
+
 Finally, we will need a table to persist the reminders.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.21.png)
@@ -313,7 +312,8 @@ You can just check out one of the many feature toggles libraries to see if they 
 
 We can try to proceed outside-in by simply adding a feature toggle to the UI, like this:
 
-**Step 1: Adding the frontend code under a toggle**  
+**Step 1: Adding the frontend code under a toggle**
+
 We can just add the same code we would have in the target state, but with the addition of a toggle. This will hide the new elements (button and menu item while the feature is still disabled. The code can go to production immediately, even without the API being ready, as the user won’t be able to click on the button and get the ugly 404 error from the absent endpoints.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.42.42.png)
@@ -352,7 +352,8 @@ if (!featureToggleState.REMINDERS_ENABLED) {
 </button>
 ```
 
-**Step 2: Adding the endpoints**  
+**Step 2: Adding the endpoints**
+
 We can then add the endpoints to the API. They won’t work yet, as they rely on a table in the persistence layer that doesn’t exist. But, thanks to the toggle, it doesn’t matter.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.05.png)
@@ -381,7 +382,8 @@ class UserController {
 }
 ```
 
-**Step 3: Creating the table**  
+**Step 3: Creating the table**
+
 Finally, we can get to the last layer and add the table we need, which will make the flow work end to end if we’ve done everything right.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.21.png)
@@ -403,10 +405,12 @@ Foreign-key constraints:
   (user_id) REFERENCES users(user_id)
 ```
 
-**Step 4: Toggling on**  
+**Step 4: Toggling on**
+
 Once all necessary testing has been done, the feature toggle can be enabled. Once the feature is 100% live (and is there to stay) we can move on to the next step.
 
-**Step 5: Cleaning up the toggle**  
+**Step 5: Cleaning up the toggle**
+
 We can clean up the toggle and the code from our frontend codebase, finally reaching the target state we imagined for all of our components.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.42.42.png)
@@ -442,23 +446,24 @@ const remindMe = () => {
 
 ## Summary
 
-As we saw, a new feature can be added under a feature toggle, approaching the application from the outside in. This creates more overhead for developers as they have to manage the lifecycle of the toggle, and remember to clean it up once the feature is consolidated in production. However, it also frees them from having to worry about when to commit each component – and allows them to enable a feature in production independently of a deployment. Some brave teams even allow their stakeholders to enable toggles by themselves.  
+As we saw, a new feature can be added under a feature toggle, approaching the application from the outside in. This creates more overhead for developers as they have to manage the lifecycle of the toggle, and remember to clean it up once the feature is consolidated in production. However, it also frees them from having to worry about when to commit each component – and allows them to enable a feature in production independently of a deployment. Some brave teams even allow their stakeholders to enable toggles by themselves.
+
 You can read more about feature toggles in this article by Martin Fowler’: [https://martinfowler.com/articles/feature-toggles.html](https://martinfowler.com/articles/feature-toggles.html).
 
 # Refactoring
 
-We will now focus on how to refactor across distributed systems whilst avoiding breaking existing features.  
+We will now focus on how to refactor across distributed systems whilst avoiding breaking existing features.
+
 For our second example, we will imagine that we are changing the way we represent currency inside our system, without altering any functionality.  
-  
+
 But why would we want to do that?
 
-  
+
 Imagine that one of our developers stumbles upon this fascinating article on Twitter:
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/CH9HWY61-9twC969MFgmAFxoYJnZs274IphPl919XNJGdZYHvBbpQRQ-JYEQwOki7lBS5u32RN8ecb0lJzOxLSdsC-hJ5amSz8GRCCszk_u5hLmSjy108IghV0b-EKAmkoB6NO5URTQ.png)
 
-So they learn that it is very dangerous to represent currency as a float – much better to use the full value up to the cents as an integer, and then format it for the user later.  
-But suddenly they remember a certain feature in the Animal Shelter Management System… _uh oh_!
+So they learn that it is very dangerous to represent currency as a float – much better to use the full value up to the cents as an integer, and then format it for the user later. But suddenly they remember a certain feature in the Animal Shelter Management System… _uh oh_!
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-18.asis.png)
 
@@ -559,7 +564,8 @@ private Integer toIntCents(Float amount) {
 }
 ```
 
-**Persistence**  
+**Persistence**
+
 Finally, our persistence stores the amount in cents as a `bigint` type.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.21.png)
@@ -588,7 +594,8 @@ In the next section, we will see the target state o the system.
 
 ## Target State
 
-**Frontend**  
+**Frontend**
+
 Our goal is for the frontend to immediately parse the value inputted by the user as cents (multiplying by 100), and pass it to the API.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.42.42.png)
@@ -674,8 +681,7 @@ class AnimalRepository {
 
 ## How do we get there without breaking production?
 
-This is different from our last example, as there is no _new_ feature to be kept hidden from the users – instead, the feature is already live (and there are no new interfaces to discover as all the code is well known). So, feature toggles are probably not the right approach here, as most of their benefits are diminished while their overhead remains.  
-We can then take a step back and ask ourselves if there is an order in which we can release our changes to not break anything.
+This is different from our last example, as there is no _new_ feature to be kept hidden from the users – instead, the feature is already live (and there are no new interfaces to discover as all the code is well known). So, feature toggles are probably not the right approach here, as most of their benefits are diminished while their overhead remains. We can then take a step back and ask ourselves if there is an order in which we can release our changes to not break anything.
 
 Releasing the frontend code first will result in errors from the backend, which is still expecting to be called with floats.
 
@@ -689,8 +695,8 @@ Whichever order we choose, it is clear that the functionality will be broken in 
 
 ## Expand and Contract (or Parallel Change)
 
-Expand and contract is a technique that allows changing the shape of a contract while preserving functionality, without even temporary feature degradation.  
-It is frequently mentioned in the context of code level refactoring (changing between classes), but it works even better in the context of distributed systems depending on each other.  
+Expand and contract is a technique that allows changing the shape of a contract while preserving functionality, without even temporary feature degradation. It is frequently mentioned in the context of code level refactoring (changing between classes), but it works even better in the context of distributed systems depending on each other.
+
 It consists of three steps:
 
 -   **Expand phase**: in this phase we create the new logic in the producer systems under a separate interface that their consumers can use, without removing or breaking the old one.
@@ -702,7 +708,7 @@ It consists of three steps:
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-21.small.png)
 
 With the expand and contract approach, we have to start expansions with the producer systems and then migrate the consumers. This means we have to start with our innermost layers, working our way out to the ultimate client (UI code).  
-  
+
 Notice that this is the opposite of the direction we took in the previous section.
 
 We can try to use this to resolve the dependencies in our money example.
@@ -711,10 +717,11 @@ We can try to use this to resolve the dependencies in our money example.
 
 We can proceed by starting with the system that needs to be expanded: our backend (the producer).
 
-**Step 1: Expand phase**  
+**Step 1: Expand phase**
+
 We can make the backend work entirely with integers, as long as the interface supports both integers and floats. In our case, we can have the controller try to guess if the client is sending a float amount and if so it should convert it to cents. If it is already in cents, it can do nothing.
 
-  
+
 (In some other cases with HTTP APIs, supporting two interfaces in the same endpoint becomes so complex that it’s easier to just make a different endpoint, but we won’t do it for our example).
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.05.png)
@@ -761,7 +768,8 @@ class AnimalRepository {
 }
 ```
 
-**Step 2: Migrate phase**  
+**Step 2: Migrate phase**
+
 The front end can now be changed to its target state, where it sends cents instead of floats. This makes the old flow unused on the API side.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.42.42.png)
@@ -803,7 +811,8 @@ const addExpense = () => {
 </div>
 ```
 
-**Step 3: Cleanup phase**  
+**Step 3: Cleanup phase**
+
 Once the frontend code is migrated, we can remove the old flow and boilerplate code from the API, which is reaching its target state as well.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.05.png)
@@ -846,14 +855,14 @@ class AnimalRepository {
 
 ## Summary
 
-Existing features should be refactored with the expand and contract pattern, approaching from the inside out. This is an alternative to having to use feature toggles for day to day refactoring, which are costly and require clean up.  
-Of course, there might be some rare exceptions where the refactoring we are performing is especially risky, and we would like to still use a toggle to be able to switch the new flow off immediately, independent of deployment.  
-Such situations however should not be the norm, and the team should question whether it is possible to take smaller steps whenever they arise.  
-  
+Existing features should be refactored with the expand and contract pattern, approaching from the inside out. This is an alternative to having to use feature toggles for day to day refactoring, which are costly and require clean up.
+
+Of course, there might be some rare exceptions where the refactoring we are performing is especially risky, and we would like to still use a toggle to be able to switch the new flow off immediately, independent of deployment. Such situations however should not be the norm, and the team should question whether it is possible to take smaller steps whenever they arise.  
+
 This example was focusing specifically on the contract between frontend and backend within our system, but the same pattern can be applied between any two distributed systems that need to alter the shape of their contract (and with synchronous _and_ asynchronous communication).
 
 Special precautions should be taken however when the exclusive job of one of those systems is to persist state, as we will see in the next section.  
-  
+
 You can read more about the expand and contract pattern here: [https://martinfowler.com/bliki/ParallelChange.html](https://martinfowler.com/bliki/ParallelChange.html)
 
 # Data and data loss
@@ -864,10 +873,12 @@ First, let’s explore how the target state would look like in the same money ex
 
 ## Current State
 
-**Frontend**  
+**Frontend**
+
 The frontend doesn’t change: it’s sending floats just like before.
 
-**Backend**  
+**Backend**
+
 This time the backend does not convert the float amount to cents before persisting it, as the database schema requires floats too now.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.05.png)
@@ -908,7 +919,8 @@ class AnimalRepository {
 }
 ```
 
-**Persistence**  
+**Persistence**
+
 And here is the database table with the incorrect `decimal` datatype.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.21.png)
@@ -935,8 +947,9 @@ Again, let’s see what is the final state we imagine for the system once the pr
 
 ## Target state
 
-  
-**Backend**  
+
+**Backend**
+
 This time our target state will be what we started from in the last example: the backend converting and persisting the expense amount as cents (even if it is not receiving cents from the frontend yet).
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.05.png)
@@ -977,7 +990,8 @@ class AnimalRepository {
 }
 ```
 
-**Persistence**  
+**Persistence**
+
 Similarly, the target state of the persistence layer will be what we could take for granted in the last example: currency being stored as a `bigint` type. We will need a database evolution to convert the type of the column and the existing data (multiply by 100 to obtain cents value).
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.21.png)
@@ -1006,7 +1020,7 @@ Foreign-key constraints:
   (animal_id) REFERENCES animals(animal_id)
 ```
 
-  
+
 
 ## How do we get there without breaking production?
 
@@ -1018,7 +1032,7 @@ On many occasions, I have seen the persistence code being kept in the same sourc
 
 With such a setup, it might be tempting to add the database evolution and create the backend code that relies on the new schema shape in the same commit.
 
-  
+
 However, just because two changes live in the same repo doesn’t mean that they don’t affect different components. And it doesn’t mean they will be released simultaneously. In any given pipeline, the database changes will be deployed in a separate step than the application code.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-23.png)
@@ -1065,7 +1079,8 @@ This will ensure that the very second the amount\_cents is created, data will st
 
 ## Implementing with Pre-Emptive Double Write
 
-**Step 1: Double Write**  
+**Step 1: Double Write**
+
 We first need to change the backend so that it will try to persist in both formats. Notice the try/catch block around the attempt to write to our new column, as we need to tolerate it not existing yet.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.05.png)
@@ -1099,7 +1114,8 @@ class AnimalRepository {
 }
 ```
 
-**Step 2: Expand**  
+**Step 2: Expand**
+
 We can now create the new column and copy all the existing data to it with a database evolution. As soon as this runs, the column will start being populated with new data by the code above (without any gap).
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.21.png)
@@ -1131,7 +1147,8 @@ Foreign-key constraints:
   (animal_id) REFERENCES animals(animal_id)
 ```
 
-**Step 3: Migrate**  
+**Step 3: Migrate**
+
 We can now migrate the backend to write and read from the new column. (And remove the now redundant try/catch too).
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.05.png)
@@ -1154,7 +1171,8 @@ class AnimalRepository {
 }
 ```
 
-**Step 4: Contract**  
+**Step 4: Contract**
+
 We can add another database evolution to get rid of the old column, finally reaching our target state for both the persistence and the backend.
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/Screenshot-2021-07-24-at-16.43.21.png)
@@ -1182,13 +1200,11 @@ Foreign-key constraints:
   (animal_id) REFERENCES animals(animal_id)
 ```
 
-Notice that now we are in the same situation we were in with our previous example: the contract between backend and persistence is based on cents (integers), but the one between frontend and backend is still based on floats.  
-We can go back to the “Refactoring” section and apply expand and contract between backend and frontend if we want to complete the fix.
+Notice that now we are in the same situation we were in with our previous example: the contract between backend and persistence is based on cents (integers), but the one between frontend and backend is still based on floats. We can go back to the “Refactoring” section and apply expand and contract between backend and frontend if we want to complete the fix.
 
 ## Summary
 
-We can safely apply expand and contract when the database is involved by using the double write technique.  
-In the money example, we reached the target state without causing any data loss or dropped transactions. However, _four_ releases were necessary to achieve this. This is an example of the overhead given by CD.  
+We can safely apply expand and contract when the database is involved by using the double write technique. In the money example, we reached the target state without causing any data loss or dropped transactions. However, _four_ releases were necessary to achieve this. This is an example of the overhead given by CD.  
 
 However, not all applications have this requirement. It is important to check with the stakeholders if and when data loss is acceptable based on the nature of our software.
 
@@ -1196,8 +1212,7 @@ However, not all applications have this requirement. It is important to check wi
 
 Just because the database management system doesn’t enforce a strict schema on the data it doesn’t mean that applications don’t rely on the objects they retrieve being a certain shape.  
 
-Even if you are using MongoDB, Redis, DynamoDB, or just files… all of the steps above can apply. You should always be careful of what your code expects of any state which is stored in the outside world.  
-Migrating it however might be a little more tricky than our example with SQL.
+Even if you are using MongoDB, Redis, DynamoDB, or just files… all of the steps above can apply. You should always be careful of what your code expects of any state which is stored in the outside world. Migrating it however might be a little more tricky than our example with SQL.
 
 # Bringing it all together: making a Story Plan
 
@@ -1226,7 +1241,8 @@ Which would require adding a “type” dropdown in our well-known expense funct
 
 ![](../../assets/blog/surviving-continuous-deployment-in-distributed-systems/image-27.asis.png)
 
-It definitely requires changing the shape of something existing: expenses will now have a type (the existing ones could have a default of “food”). But also it is a new functionality as it allows the user to specify _which type_, and there is definitely a visual change there that might need to be hidden.  
+It definitely requires changing the shape of something existing: expenses will now have a type (the existing ones could have a default of “food”). But also it is a new functionality as it allows the user to specify _which type_, and there is definitely a visual change there that might need to be hidden.
+
 So which approach do we choose here? In which direction do we start?
 
 ## Pre-Refactoring the system
@@ -1234,9 +1250,9 @@ So which approach do we choose here? In which direction do we start?
 We can apply the practice of “preparatory refactoring” to get the system into a state where adding the feature becomes a trivial change.  
 
 Whenever we get a task whose nature is mixed, or unclear, we could approach it by grouping all the changes which do not have any visible effect on the user so we can address them at the beginning. We can use our expand and contract workflow (for example adding fields with default values, stretching existing abstractions…) with them, and leave the feature addition to the very end.  
-  
+
 This not only allows us to give ourselves a framework to work with, but it also reduces to the minimum the code that will end up under a feature toggle (and therefore the risk of release!).  
-  
+
 The totality of the steps and commits we plan to achieve this can constitute our Story Plan.
 
 ## Making a Story Plan
@@ -1261,4 +1277,4 @@ However, if I had to leave the reader with just one thought, it would be this: w
 
 In short: as amazing and liberating as CD might be compared to older ways of working, they also force us to take ourselves and our peers accountable to an even higher standard of professionalism and deliberateness over the code and tests we are checking in. Our users are just always a few minutes away from the latest version of our code, after all.
 
-I hope this guide can be useful to even a couple of people considering adopting Continuous Deployment (or struggling with it). Feel free to send feedback in the comment or through any other private channel.
+I hope this guide can be useful to even a couple of people considering adopting Continuous Deployment (or struggling with it). Feel free to send any feedback my way through the channels on my [about page](/about/).

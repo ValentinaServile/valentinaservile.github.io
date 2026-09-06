@@ -1,13 +1,12 @@
 ---
 title: 'SSH Multiplexing and Master Mode'
-description: 'When using SSH bastion hosts it is common to set up new connections for many of the use cases discussed in the previous section throughout the day.'
+description: 'Reuse a single TCP connection for many SSH sessions: master mode, control sockets, and the config options that make it automatic.'
 pubDate: '2021-01-31'
 updatedDate: '2021-02-02'
 categories: ['Networking', 'Snippets', 'Unix']
 ---
 
-When using SSH bastion hosts it is common to set up new connections throughout the day, for many of the use cases discussed in the [Tunnelling and Port Forwarding](/blog/ssh-tunnelling-and-port-forwarding/) post.  
-Normally we would start a new TCP connection for each one of them. However, open TCP connections are a finite resource on any machine, and each one of them takes some time to set up.
+When using SSH bastion hosts it is common to set up new connections throughout the day, for many of the use cases discussed in the [Tunnelling and Port Forwarding](/blog/ssh-tunnelling-and-port-forwarding/) post. Normally we would start a new TCP connection for each one of them. However, open TCP connections are a finite resource on any machine, and each one of them takes some time to set up.
 
 ![](../../assets/blog/ssh-multiplexing-and-master-mode/image-20.png)
 
@@ -34,7 +33,8 @@ Then we could set up dynamic port forwarding on the same bastion host with:
 $ ssh -M -S ~/.ssh/my-socket -D <port> user@jump-host
 ```
 
-without paying the cost of setting up a new connection.  
+without paying the cost of setting up a new connection.
+
 This is also useful when we don’t have a jump host but want to run lots of commands over SSH repeatedly on the same server.
 
 We can close the TCP connection (and any SSH connection still alive with it) by using the `-O` option with the `exit` command:
@@ -51,7 +51,8 @@ In general, the `-O` flag allows us to pass any command to an active multiplexin
 -   `exit` which requests the master process to exit
 -   `stop` to tell the master process to not accept any further multiplexing requests
 
-More information is available on the `ssh` man page.  
+More information is available on the `ssh` man page.
+
 Due to the flexibility and ease of use of this variety of commands, I often use master mode when needing to set up, check health and tear down tunnels in automation scripts (it is much nicer than running it as a background process and then killing its PID when no longer needed).
 
 ##### Configuration equivalent

@@ -1,6 +1,6 @@
 ---
 title: 'How to attach a remote profiler to a JVM running in EC2 (and maybe Docker)'
-description: 'Part of running big distributed systems at scale is encountering issues which are hard to debug. Memory leaks, sudden crashes, threads hanging… they might all manifest under extreme production…'
+description: 'Attaching a profiler to a JVM under real production load in EC2, through Docker, an SSH tunnel, and SSM when there is no SSH access.'
 pubDate: '2021-02-21'
 updatedDate: '2022-09-30'
 categories: ['AWS', 'Docker', 'JVM']
@@ -25,8 +25,8 @@ Here is the download link for the JProfiler client: [https://www.ej-technologies
 
 ### Installing and attaching the profiler agent on the running instance (no Docker)
 
-Connect to your running instance with SSH or SSM Session Manager.  
-The first thing you will need to do is download the profiler agent onto it.  
+Connect to your running instance with SSH or SSM Session Manager. The first thing you will need to do is download the profiler agent onto it.
+
 For JProfiler, you can run:
 
 ```shell
@@ -55,8 +55,7 @@ Things get a little more complicated with Docker in the middle, as the profiler 
 
 **Setting up the port forwarding**
 
-Unfortunately, our application container might need to be started with the port forwarding already in place.  
-This means that if you cannot afford to restart the container on the production instance directly, your deployment setup will likely have to change.
+Unfortunately, our application container might need to be started with the port forwarding already in place. This means that if you cannot afford to restart the container on the production instance directly, your deployment setup will likely have to change.
 
 You can forward the profiler port by adding the option `-p 1337:1337` on the `docker run` command that you use to start your application container, or the equivalent option in your `docker-compose` file.
 

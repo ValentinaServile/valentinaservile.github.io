@@ -1,6 +1,6 @@
 ---
 title: 'SSH Known Hosts'
-description: 'Much like how the authorized_keys file is used to authenticate clients on the server, there is another file in the ~/.ssh folder called known_hosts, which is used to authenticate servers to the…'
+description: 'What known_hosts is for, what that alarming “REMOTE HOST IDENTIFICATION HAS CHANGED” warning really means, and how to clear a stale entry.'
 pubDate: '2021-01-31'
 updatedDate: '2021-02-13'
 categories: ['Networking', 'Snippets', 'Unix']

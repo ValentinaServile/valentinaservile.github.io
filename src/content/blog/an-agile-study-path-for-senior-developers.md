@@ -1,6 +1,6 @@
 ---
 title: 'An Agile study path for senior developers'
-description: 'This is a learning path every developer looking to become “senior” can follow.'
+description: 'A sequenced reading list on software architecture, microservices, continuous delivery and legacy code, for developers growing into senior.'
 pubDate: '2022-10-07'
 updatedDate: '2023-03-22'
 ---

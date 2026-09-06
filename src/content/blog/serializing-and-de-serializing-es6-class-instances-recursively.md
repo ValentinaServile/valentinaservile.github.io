@@ -1,6 +1,6 @@
 ---
 title: 'Serializing and de-serializing ES6 class instances recursively'
-description: 'We have all been warned not to use ES6 classes. Perhaps by our colleagues, or perhaps by the endless number of scary blog posts that show up if you dare Google the subject.'
+description: 'JSON.parse hands back plain objects, not class instances. A reviver-based approach that restores types through a whole tree of nested classes.'
 pubDate: '2022-09-30'
 categories: ['JavaScript', 'Snippets']
 tags: ['es6', 'javascript', 'types']
@@ -232,4 +232,4 @@ This approach works, but it has some important limitations:
 
 Yes, unfortunately after quite a lot of research this (rather complicated) solution is the best one I found. It is not ideal, but at least it encapsulates the problem and allows us to work with classes and JSON.
 
-Let me know in the comments if you found anything better.
+[Let me know](/about/) if you have found anything better.

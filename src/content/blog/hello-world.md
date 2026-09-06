@@ -1,6 +1,6 @@
 ---
 title: '[Meta] Hello World'
-description: 'Hi everyone, just set up this blog. It’s going to be a bit of a mix of new things I learn, handy code snippets, and obscure issues I find in my day to day work.'
+description: 'A first post: what this blog is going to be, and why it exists.'
 pubDate: '2021-01-16'
 categories: ['Meta']
 ---

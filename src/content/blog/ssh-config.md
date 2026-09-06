@@ -1,6 +1,6 @@
 ---
 title: 'SSH Config'
-description: 'As well as having to type passphrases, remembering the right user, key file, port and other settings for each host you want to SSH into might quickly become overwhelming.'
+description: 'Give a host a short name and stop retyping user, port and key file: how ~/.ssh/config works, and what it can do that the command line cannot.'
 pubDate: '2021-01-31'
 updatedDate: '2021-02-02'
 categories: ['Networking', 'Operating Systems', 'Unix']
@@ -66,7 +66,8 @@ to specify parameters for all hosts whose names look like Amazon EC2 instance ID
 
 * * *
 
-This is just a basic example, but an important thing to note is that you can specify just about any parameter in SSH configuration files. In fact, there are even a few advanced configuration parameters which are unavailable as command line arguments.  
+This is just a basic example, but an important thing to note is that you can specify just about any parameter in SSH configuration files. In fact, there are even a few advanced configuration parameters which are unavailable as command line arguments.
+
 To still allow them to be used on the command line, SSH offers a special flag:
 
 ```shell

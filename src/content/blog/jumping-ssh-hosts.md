@@ -1,6 +1,6 @@
 ---
 title: 'Jumping SSH Hosts'
-description: 'Sometimes servers are unreachable to us due to network topology barriers, which are put in place for security reasons.'
+description: 'Reaching a server through a bastion: why storing keys or forwarding your agent is risky, and how ProxyCommand and ProxyJump avoid both.'
 pubDate: '2021-01-31'
 updatedDate: '2021-02-13'
 categories: ['Networking', 'Snippets', 'Unix']
@@ -32,10 +32,10 @@ However, this involves installing a private key onto a middle (potentially publi
 
 A slightly better, but still potentially dangerous, solution involves the helper command we met in the [SSH Agent](/blog/ssh-agent/) post: `ssh-agent`.
 
-With the special `-A` flag to the ssh command, we are able to “forward” the local `ssh-agent` containing our keys to the jump host. This allows us to re-use our agent from there (and all the keys we added to it) as if we were on our own machine.  
-This way we can re-use our private keys but without storing any of them on the jump host.
+With the special `-A` flag to the ssh command, we are able to “forward” the local `ssh-agent` containing our keys to the jump host. This allows us to re-use our agent from there (and all the keys we added to it) as if we were on our own machine. This way we can re-use our private keys but without storing any of them on the jump host.
 
-To set up a simple authentication based on ssh-agent forwarding we might want to install our public key in both the jump host’s and the remote server’s `authorized_keys` files, as in the picture.  
+To set up a simple authentication based on ssh-agent forwarding we might want to install our public key in both the jump host’s and the remote server’s `authorized_keys` files, as in the picture.
+
 Then we can add our private key to our local agent like this:
 
 ```shell
@@ -69,8 +69,7 @@ $ sudo find /tmp -path '*ssh*' -type s
 /tmp/ssh-JVEaf5qUm5O1/agent.57796
 ```
 
-However, the root user has access to _everything_.  
-Therefore, any other user gaining access to the jump host as root could simply set their own `$SSH_AUTH_SOCK` to point to our socket, and use our `ssh-agent` as their own.
+However, the root user has access to _everything_. Therefore, any other user gaining access to the jump host as root could simply set their own `$SSH_AUTH_SOCK` to point to our socket, and use our `ssh-agent` as their own.
 
 ```shell
 $ SSH_AUTH_SOCK=/tmp/ssh-JVEaf5qUm5O1/agent.57796 ssh myuser@myserver
@@ -94,12 +93,11 @@ _This command looks very long and convoluted. It will get simpler. It is worth d
 
 It is essentially structured into two _SSH_ commands, connected by the `-oProxyCommand` directive:
 
--   The “inner” SSH command passed to the `-oProxyCommand` option (within the double quotes) connects to the jump host.  
-    Once connected, it starts a netcat (`nc`) process on the jump host which carries all its stdin to the server, and all the stdout back. This allows us to run…
--   The “outer” SSH (outside the double quotes), which connects to the server.  
-    However, instead of connecting the usual way, the `-oProxyCommand` flag tells it that when it tries to establish a connection to `server` it should do so using the stdin/stdout of the “inner” command as a transport. That will be the stdin and stdout of the netcat process we started on the jump host, which will be routed directly to the server.
+-   The “inner” SSH command passed to the `-oProxyCommand` option (within the double quotes) connects to the jump host. Once connected, it starts a netcat (`nc`) process on the jump host which carries all its stdin to the server, and all the stdout back. This allows us to run…
+-   The “outer” SSH (outside the double quotes), which connects to the server. However, instead of connecting the usual way, the `-oProxyCommand` flag tells it that when it tries to establish a connection to `server` it should do so using the stdin/stdout of the “inner” command as a transport. That will be the stdin and stdout of the netcat process we started on the jump host, which will be routed directly to the server.
 
-The combination of the two allows you to obtain a shell directly into the server, using the jump host as a proxy.  
+The combination of the two allows you to obtain a shell directly into the server, using the jump host as a proxy.
+
 You will need to provide authentication in the form of a private key or password to both commands, as in the example.
 
 In later versions of SSH, you can avoid using netcat (which is handy as it might not be installed on your jump host) and instead use the equivalent flag `-W` in the inner command:
@@ -137,8 +135,7 @@ $ ssh -J username@jump-host username@server
 > 
 > ssh [man page](https://man.openbsd.org/ssh_config.5)
 
-A little drawback: since there is no separation of “inner” and “outer” commands anymore, there would be ambiguity if the user were allowed to specify options (like the private key) for the jump host as well as for the server in the same command.  
-Therefore we have to put any required configuration for the jump host into our `~/.ssh/config` instead:
+A little drawback: since there is no separation of “inner” and “outer” commands anymore, there would be ambiguity if the user were allowed to specify options (like the private key) for the jump host as well as for the server in the same command. Therefore we have to put any required configuration for the jump host into our `~/.ssh/config` instead:
 
 ```
 Host jump
@@ -150,8 +147,7 @@ Host jump
 
 Once this is done, the simplified version of the command will immediately give us a shell into our destination, securely routing all the traffic through the jump host.
 
-You can even route the traffic through more than one server in case you have multiple levels of separation in the network between a bastion and the final remote host.   
-All you need to do is specify comma-separated jump hosts to `-J`:
+You can even route the traffic through more than one server in case you have multiple levels of separation in the network between a bastion and the final remote host. All you need to do is specify comma-separated jump hosts to `-J`:
 
 ```shell
 $ ssh -J username@jump-host1,username@jump-host2 username@server

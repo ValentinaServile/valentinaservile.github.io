@@ -1,6 +1,6 @@
 ---
 title: 'Cross-service “integration tests” have to go'
-description: 'tl;dr: They are often broken in pipelines, and that might be because they are broken as a concept. A typical issue in a microservices architecture is ensuring that the integration between services…'
+description: 'Why shared cross-service test suites end up flaky and unowned, and how service tests plus contract tests cover the same ground without the pain.'
 pubDate: '2022-10-17'
 categories: ['Agile', 'CI/CD', 'Refactoring', 'Software Architecture', 'Testing']
 tags: ['cd', 'ci', 'component tests', 'continuous delivery', 'continuous integration', 'contract tests', 'integration tests', 'microservices', 'qa', 'service tests', 'software architecture']

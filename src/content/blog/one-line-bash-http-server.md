@@ -1,6 +1,6 @@
 ---
 title: 'One line Bash HTTP Server'
-description: 'Here is a quick snippet I use all the time when I want to set up an HTTP server on the fly, without leaving the comfort of my terminal.'
+description: 'A one-line HTTP server for when you need something answering on a port right now, using nothing but bash and netcat.'
 pubDate: '2021-01-16'
 updatedDate: '2021-02-02'
 categories: ['Bash', 'Networking', 'Snippets']

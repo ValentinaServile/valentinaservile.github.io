@@ -1,6 +1,6 @@
 ---
 title: 'An Agile study path for lead developers'
-description: 'This is a learning path every developer looking to become “tech lead” can follow.'
+description: 'A sequenced reading list on leading and structuring teams, delivery, production readiness and organisational politics, for aspiring tech leads.'
 pubDate: '2022-10-12'
 updatedDate: '2023-03-15'
 ---
@@ -36,9 +36,9 @@ It is meant to be consumed in sequence.
         -   Coach as collaboration conductor
 -   Learn about [Host leadership](http://hostleadership.com/about/) and the [six roles of a host leader](http://hostleadership.com/wp-content/uploads/2020/06/Six-roles-for-a-host-leader.pdf)
 -   Read these chapters from the book Radical Candor
-    
+
     -   2 Get, Give and Encourage Guidance
-    
+
     -   3 Understand what motivates each person on your team
     -   4 Drive results collaboratively
 -   Do some introspection: browse the archetypes in the [Clifton Strengths References](https://www1.ucdenver.edu/docs/librariesprovider188/learning-development/clifton-strengthsfinder-resource-guide.pdf) (from the [book](https://www.amazon.com/StrengthsFinder-2-0-Tom-Rath/dp/159562015X/ref=sr_1_1)) and reflect on your strengths and the strengths of your teammates

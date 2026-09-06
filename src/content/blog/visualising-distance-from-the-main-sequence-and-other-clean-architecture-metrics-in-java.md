@@ -1,15 +1,13 @@
 ---
 title: 'Visualising distance from the main sequence and other Clean Architecture metrics in Java'
-description: 'I must not have been the only one to read “Clean Architecture” by Uncle Bob (Robert Martin) and be immediately sold on the abstractness, instability, coupling and main sequence metrics.I must not…'
+description: 'Generating Uncle Bob’s abstractness and instability graph for a real Java codebase with JDepend, plus a small tool to make the output readable.'
 pubDate: '2021-02-21'
 updatedDate: '2022-09-30'
 categories: ['Java', 'Software Architecture']
-tags: ['abstractness', 'afferent coupling', 'clean architecture', 'coupling', 'efferent couplings', 'instability', 'main sequence', 'robert martin', 'software architecture', 'uncle bob', 'zone of pain', 'zone of uselessness']
+tags: ['abstraction', 'coupling', 'clean architecture', 'software architecture']
 ---
 
-I must not have been the only one to read “Clean Architecture” by Uncle Bob (Robert Martin) and be immediately sold on the abstractness, instability, coupling and main sequence metrics.  
-I must not have been the only one to immediately Google for tools to generate them for whichever codebase I happened to be working on at the moment, anxious to see if my refactoring instincts could be backed by a pretty diagram.  
-And yet, based on the very disappointing (lack of) results, it seems like that might be the case.  
+I must not have been the only one to read “Clean Architecture” by Uncle Bob (Robert Martin) and be immediately sold on the abstractness, instability, coupling and main sequence metrics. I must not have been the only one to immediately Google for tools to generate them for whichever codebase I happened to be working on at the moment, anxious to see if my refactoring instincts could be backed by a pretty diagram. And yet, based on the very disappointing (lack of) results, it seems like that might be the case.  
   
 There are a few tools for the job, yes, but they are clunky to run at best, and they definitely don’t produce a visual output you can quickly get insights from.
 

@@ -1,6 +1,6 @@
 ---
 title: '[Series] SSH for Developers – Beyond the Basics'
-description: 'I have written this guide for developers who might be superficially familiar with the basics of SSH – maybe even fiddled with a file or two without really knowing what’s going on – and would like a…'
+description: 'A nine-part guide to the SSH features developers actually run into: authentication, known hosts, the agent, config, jump hosts, tunnels and more.'
 pubDate: '2021-01-25'
 updatedDate: '2021-05-07'
 categories: ['Networking', 'Unix']
@@ -8,7 +8,8 @@ categories: ['Networking', 'Unix']
 
 I have written this guide for developers who might be superficially familiar with the basics of SSH – maybe even fiddled with a file or two without really knowing what’s going on – and would like a more cohesive overview of its most powerful features.
 
-This is essentially an organised collection of the main gotchas and topics that gave me (a dev, not a sysadmin) the most dexterity in jumping about from machine to machine in the cloud.  
+This is essentially an organised collection of the main gotchas and topics that gave me (a dev, not a sysadmin) the most dexterity in jumping about from machine to machine in the cloud.
+
 It is meant to be read in sequence, as each topic builds on the previous one, but I also tried to keep them loosely coupled in case the reader is only interested in a particular topic.
 
 Have fun.
@@ -35,8 +36,7 @@ SSH is a protocol built on top of TCP that is intended to provide a secure chann
 -   An SSH client
 -   An SSH daemon on the server that accepts connections, typically on port 22
 
-Both the client program and the daemon are commonly pre-installed on most modern Unix-like operating systems.  
-Other little helper tools like `ssh-keygen`, `ssh-agent` and `ssh-add` are also part of the family of SSH executables.
+Both the client program and the daemon are commonly pre-installed on most modern Unix-like operating systems. Other little helper tools like `ssh-keygen`, `ssh-agent` and `ssh-add` are also part of the family of SSH executables.
 
 SSH was originally designed as a replacement for Telnet and older, unsecured remote shell protocols. The encryption used by SSH is intended to provide confidentiality and integrity of data over unsecured networks, such as the Internet. _Fun fact: it was developed by a fucked off engineer in response to a password-sniffing attack on a university network._
 

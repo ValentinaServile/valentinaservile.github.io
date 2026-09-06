@@ -1,6 +1,6 @@
 ---
 title: 'QAing in production'
-description: 'In this article, I want to challenge where software testing happens and suggest that most manual verification (desk checks, QA, demo) that is part of a team’s delivery lifecycle should happen in…'
+description: 'Why manual verification belongs in production rather than staging, what feature toggles make possible, and where the practice still stops.'
 pubDate: '2022-08-12'
 updatedDate: '2022-09-30'
 categories: ['Agile', 'Testing']

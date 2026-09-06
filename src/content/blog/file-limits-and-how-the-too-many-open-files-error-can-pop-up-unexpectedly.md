@@ -1,6 +1,6 @@
 ---
 title: 'File Limits and how the “Too many open files” error can pop up unexpectedly'
-description: 'I have recently come across a nasty Too many open files error, and noticed that the information on the internet about what that might mean or how to solve it doesn’t always paint a clear picture.'
+description: 'What file descriptors and file limits are, how to inspect and raise them, and why “Too many open files” shows up in places you would not expect.'
 pubDate: '2021-01-17'
 updatedDate: '2021-02-03'
 categories: ['Files', 'Snippets', 'Unix']

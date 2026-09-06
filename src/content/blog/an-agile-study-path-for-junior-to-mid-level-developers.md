@@ -1,6 +1,6 @@
 ---
 title: 'An Agile study path for junior to mid level developers'
-description: 'This is a learning path every new graduate or consultant developer can follow.'
+description: 'A sequenced reading list on agile values, clean code, TDD and refactoring, for developers in their first years.'
 pubDate: '2022-10-07'
 updatedDate: '2022-10-25'
 ---
@@ -132,9 +132,9 @@ It is meant to be consumed in sequence.
     -   Read the article [The Art of Enbugging](http://media.pragprog.com/articles/jan_03_enbug.pdf)
 -   Do the [String Calculator kata](https://github.com/xpeppers/string-calculator-kata)
 -   Read these chapters from Clean Code
-    
+
     -   Chapter 6: Objects and Data Structures
-    
+
     -   Chapter 7: Error Handling
     -   Chapter 10: Classes
 -   Read about the SOLID principles
@@ -205,13 +205,13 @@ It is meant to be consumed in sequence.
 -   Read the article [Good Design is Easily-Learned](http://blog.scottbellware.com/2009/01/good-design-is-easily-learned.html)
 -   Read about [The Four Elements of Simple Design](http://www.jbrains.ca/permalink/the-four-elements-of-simple-design)
 -   Watch the Clean Code Talks series: these four videos (and the related blogpost series) are really valuable for learning how to design for testability.
-    
+
     -   Watch [“The Clean Code Talks – Unit Testing” video](http://www.youtube.com/watch?v=wEhu57pih5w) (~ 30 minutes) \[[slides](https://docs.google.com/presentation/d/1mZsq0WljEfgIR9Df_IcW0VQfNl-Pk_cEBR3i9id-eR4/present#slide=id.i0)\]. Then read [his blogpost](http://misko.hevery.com/2008/11/04/clean-code-talks-unit-testing/).
-    
+
     -   Watch [“The Clean Code Talks – Inheritance, Polymorphism, & Testing” video](https://www.youtube.com/watch?v=4F72VULWFvc) (~ 40 minutes). Then read [his blogpost](http://misko.hevery.com/2008/12/08/clean-code-talks-inheritance-polymorphism-testing/) (there you can find the slides too).
-    
+
     -   Watch [“The Clean Code Talks – Don’t Look For Things!” video](https://www.youtube.com/watch?v=RlfLCWKxHJ0) (~ 35 minutes) which talks about the Dependency Injection pattern. Then read [his blogpost](http://misko.hevery.com/2008/11/11/clean-code-talks-dependency-injection/) (there you can find the slides too).
-    
+
     -   Watch [“The Clean Code Talks – “Global State and Singletons” video](https://www.youtube.com/watch?v=-FRm3VPhseI) (~ 55 minutes). Then read [his blogpost](http://misko.hevery.com/2008/11/21/clean-code-talks-global-state-and-singletons/) (there you can find the slides too).
 
 -   Read Miško Hevery’s guide on [“Writing Testable Code”](http://misko.hevery.com/code-reviewers-guide/)

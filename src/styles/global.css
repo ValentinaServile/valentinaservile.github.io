@@ -310,6 +310,12 @@ textarea {
 	width: 100%;
 }
 
+/* Anchor targets (the table of contents links to them) must clear the sticky header,
+   which is 400 in the stack and about 3rem tall. */
+.prose :is(h1, h2, h3, h4, h5, h6)[id] {
+	scroll-margin-top: 4.5rem;
+}
+
 /* ---------- content images ---------- */
 
 /* Lift images above the scanline overlay (z-index 300) but below the sticky header

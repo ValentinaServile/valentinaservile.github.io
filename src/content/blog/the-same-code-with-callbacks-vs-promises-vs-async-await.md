@@ -1,6 +1,6 @@
 ---
 title: 'The same code with Callbacks vs Promises vs Async/Await'
-description: 'Sometimes in JavaScript you have to deal with different flavours of asynchronous code, so it is handy to be able to map back and forth between them.'
+description: 'The same asynchronous code written three ways — callbacks, promises and async/await — so you can map between them at a glance.'
 pubDate: '2021-02-13'
 updatedDate: '2022-09-30'
 categories: ['JavaScript', 'Snippets']

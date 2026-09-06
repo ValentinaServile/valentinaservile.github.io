@@ -1,6 +1,6 @@
 ---
 title: 'SSH X11 Forwarding'
-description: 'If you are using SSH between Unix-like operating systems, you can also forward GUI applications over SSH.'
+description: 'Run a GUI application on a remote server and have its window appear on your own machine, with ssh -X.'
 pubDate: '2021-01-31'
 updatedDate: '2021-02-02'
 categories: ['Networking', 'Snippets', 'Unix']
@@ -21,8 +21,7 @@ X11Forwarding yes
 X11UseForwarding yes
 ```
 
-are present and uncommented in the SSH daemon configuration file `/etc/ssh/sshd_config`.  
-You might need to restart the daemon if the changes don’t take effect.
+are present and uncommented in the SSH daemon configuration file `/etc/ssh/sshd_config`. You might need to restart the daemon if the changes don’t take effect.
 
 The `xauth` program must also be installed on the server.
 

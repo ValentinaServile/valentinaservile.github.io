@@ -1,6 +1,6 @@
 ---
 title: 'SSH Authentication methods'
-description: 'There are two ways of authenticating to a server with SSH: user/password-based authentication (which many now consider outdated and insecure) and key-pair-based authentication.'
+description: 'Passwords versus key pairs in SSH: how to set up each one, why the second is safer, and what else authorized_keys can restrict.'
 pubDate: '2021-01-31'
 updatedDate: '2022-09-30'
 categories: ['Networking', 'Snippets', 'Unix']
@@ -54,8 +54,7 @@ Most of these are addressed by key-pair-based authentication, which is the way t
 
 ![](../../assets/blog/ssh-authentication-methods/image-1.png)
 
-The idea is to assign a pair of _asymmetric keys_ to every user that needs authentication.  
-Users will store their public key on every server they want to use, while their private key will remain secret and be safely stored on their computers.
+The idea is to assign a pair of _asymmetric keys_ to every user that needs authentication. Users will store their public key on every server they want to use, while their private key will remain secret and be safely stored on their computers.
 
 That way, instead of inputting a password, your client can authenticate by specifying the private key file to the `ssh` command with the `-i` option:
 
@@ -116,7 +115,7 @@ Etc.
 
 ![](../../assets/blog/ssh-authentication-methods/image-2.png)
 
-  
+
 Pairs of public and private keys have a special asymmetric cryptographic relationship: everyone holding the public key can verify that a message was signed with the corresponding private key – but without ever having access to the private key itself.
 
 This is accomplished by using mathematical functions called _one-way functions_: operations which are easy to perform, but hard for an eavesdropper to reverse.
