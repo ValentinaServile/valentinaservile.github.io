@@ -1,6 +1,6 @@
 {
   "intervalSeconds": 5,
-  "maxOnScreen": 4,
+  "maxOnScreen": 5,
   "dialogs": [
     { "title": "Error", "message": "High level of error logs", "buttons": ["Restart pods"] },
     { "title": "Warning!", "message": "Deploying on a Friday after 4pm.", "buttons": ["Do it", "Coward"] },
@@ -21,6 +21,6 @@
     { "title": "Warning!", "message": "Reorg detected.", "buttons": ["Ignore", "#OpenToWork"] },
     { "title": "Error", "message": "Sprint 14 of a 2-week MVP.", "buttons": ["Continue"] },
     { "title": "Error", "message": "Deploy freeze until January.", "buttons": ["It's June"] },
-    { "title": "Warning!", "message": "Someone rewrote this service in Rust", "buttons": ["Rewrite it"] }
+    { "title": "Warning!", "message": "Someone wrote this service in Rust", "buttons": ["Rewrite it"] }
   ]
 }
