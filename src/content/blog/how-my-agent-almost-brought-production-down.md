@@ -189,14 +189,6 @@ The agent didn't _hide_ it, but nothing marked it out as different from the thin
 
 And this was basically a one-line change that I asked for: imagine it as part of a larger diff, of a few dozen lines, going to production and bringing everything down like this. It would take me a while to notice that of all the lines changed, the culprit is actually this almost-identical-regex-but-with-one-character-different-from-the-one-I-asked-for.
 
-### Agents give you their best guess, and it is not always right
-
-The agent was not hiding anything, it just gave me its best guess at what a careful engineer would write, and its best guess just happened to be wrong.
-
-You can watch it happen in the answer above. Look at the parenthetical: _"(since the next character is the literal `\.`)"_. That is the exact fact that makes the `$` fail, and it is offered as the reason the `$` works. It had the right piece of information in hand, and drew precisely the wrong conclusion from it.
-
-There is one more thing in that answer worth noticing. It told me the original _"worked fine in practice because there are no www\* subdomains"_. So it changed a working production config to handle a case it had just told me does not exist.
-
 ### Completely spec-driven development, without looking at the code, is still not viable — and possibly never will be
 
 If no human had looked at that code, nobody would have noticed the addition. The agent didn't consider it worth mentioning unprompted, and didn't consider it worth testing, because it was a case that was already working and not part of our changes.
@@ -225,4 +217,4 @@ So: humans 1, agents 0? Not quite.
 
 I am not going back to writing every line by hand, and I don't think every line deserves this much paranoia. Most lines don't, because they don't belong to systems like these. But that one did, and I believe it takes a human to tell them apart.
 
-Which is the part I would want a director or an executive to take away from this. The agent did most of the work here, but the judgement came from a human who knew what that particular system was, and had something to lose if it broke. This is the quality gates that caught this: not the test suite we already had, not the monitoring, not the automated rollback, all of which would have waved it straight through. And it's the one quality gate that tends to get removed when the rush to adopt AI leads to sacrificing human oversight. No pressure!
+Which is the part I would want a director or an executive to take away from this. The agent did most of the work here, but the judgement came from a human who knew what that particular system was, and had something to lose if it broke. This is the quality gate that caught this: not the test suite we already had, not the monitoring, not the automated rollback, all of which would have waved it straight through. And it's the one quality gate that tends to get removed when the rush to adopt AI leads to sacrificing human oversight. No pressure!
