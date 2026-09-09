@@ -3,9 +3,10 @@
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
-// Social preview image. The same photograph the About page uses, so a shared link
-// previews as the author rather than as a stock image.
-import FallbackImage from '../assets/blog/about/17917158_1839067983082929_5481433849600420817_o.asis.jpg';
+// Social preview card: 1200x630, the size every platform wants. Drawn in the same
+// synthwave language as HeroArt (sunset disc with scanline slots over a perspective
+// grid), but rasterised — link previews cannot run CSS.
+import FallbackImage from '../assets/social-card.png';
 import { SITE_TITLE } from '../consts';
 import { Font } from 'astro:assets';
 
