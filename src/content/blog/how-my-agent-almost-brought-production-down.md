@@ -191,17 +191,15 @@ And this was basically a one-line change that I asked for: imagine it as part of
 
 ### Completely spec-driven development, without looking at the code, is still not viable — and possibly never will be
 
-If no human had looked at that code, nobody would have noticed the addition. The agent didn't consider it worth mentioning unprompted, and didn't consider it worth testing, because it was a case that was already working and not part of our changes.
+If no human had looked at that code, nobody would have noticed the addition. The agent didn't consider it worth mentioning, and didn't even consider it worth testing, because it was a case that was already working and not part of our changes.
 
 So "programmers will only look at specs, and the code will become a black box" would have been, at least in this case, a recipe for disaster.
 
 ### The agent could not see the blast radius
 
-Nothing in that file says _this block is 100% of production traffic_. There is no comment marking it as the front door, no annotation on the `server_name` line explaining that everything the company sells is somewhere behind it. It is seven lines of configuration that look exactly like the blocks around them.
+Nothing in that file says _this block is 100% of production traffic_. But I knew it, and not because I am clever, but because I had context that exists nowhere in the repository: which environments use which hostname, what the deploy pipeline does and does not check, and how long that subdomain has been quietly serving every request the business depends on.
 
-But I knew it, and not because I am clever, but because I had context that exists nowhere in the repository: which environments use which hostname, what the deploy pipeline does and does not check, and how long that subdomain has been quietly serving every request the business depends on.
-
-An agent and a human can read the same file and see very different things: an NGINX configuration block, versus a single point of failure for an entire network of production systems.
+This taught me that an agent and a human can read the same file and see very different things: just any old NGINX configuration block, versus a single point of failure for an entire network of production systems.
 
 ### Agents are good tools, but humans have different incentives
 
