@@ -27,6 +27,35 @@ Non-negotiables, expanded on in that document:
 - **Focus must always be visible**, and `prefers-reduced-motion` must be honoured.
 - Component-specific rules belong in that component's scoped `<style>`, not `global.css`.
 
+## Writing and editing posts
+
+Posts live in `src/content/blog/` and most were migrated out of WordPress, so they carry
+first-draft habits as well as import artifacts.
+
+**Before copy-editing a post, read [`agent-docs/content.md`](agent-docs/content.md).** It
+records the house voice and what must not be "corrected", the recurring language patterns
+worth grepping for first, the import artifacts to sweep (invisible characters, smart
+quotes in code blocks, scraped alt text), and the working method.
+
+The things most likely to bite:
+
+- **Run every code snippet before trusting it.** Four were broken — and two that looked
+  broken were fine. Test, don't assume. The same goes for a post's technical
+  *explanations*: a claim about why something behaved a certain way is worth reproducing
+  before it ships.
+- **Never blanket-strip trailing whitespace.** `  \n` is a Markdown hard break; assert
+  the count is unchanged before writing a file.
+- **Fix language directly, raise content.** Wrong facts, chapter numbers or port numbers
+  are a content decision, not a silent edit.
+- **Informal is not showy.** Aphorisms, punchy fragments used as flourishes, and closing
+  rhetorical questions get reverted. When a passage needs strengthening, make it more
+  concrete rather than louder.
+- **Diff against a known-good copy before writing.** Posts get edited in a parallel editor
+  between turns, and a stale buffer will clobber a write.
+- **Descriptions are one sentence, under 160 characters**, and say what the post is.
+- **Never hand-write a table of contents** — `TableOfContents.astro` generates it from
+  the post's real headings.
+
 ## Node version
 
 Requires Node >= 22.12.0 (`.nvmrc` pins 24.15.0). Run `nvm use` before any npm command.
