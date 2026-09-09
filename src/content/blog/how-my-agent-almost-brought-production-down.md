@@ -7,7 +7,7 @@ categories: ['AI', 'Networking', 'Testing', 'NGINX']
 
 An agent I was working with made a one-character change to a config file that nobody had asked it to make. The change was entirely defensible and plausible-looking. I happened to notice it, asked about it, and the agent came back with a confident, entirely reasonable-sounding justification for it. And yet, that change would have sent 100% of a major retailer's web traffic into a redirect loop.
 
-The change never shipped, but it almost did. This is not because our tests caught it (none of the ones we already had would have), and also not because our rolling deployment would have rolled it back (it wouldn't have either). In fact, the change in question happened to line up with a hole in every slice of the famous ["Swiss cheese model"](https://en.wikipedia.org/wiki/Swiss_cheese_model) that we had in place at the time.
+The change never shipped, but it almost did. This is not because our tests caught it (none of the ones we already had would have), and also not because our rolling deployment would have rolled it back (it wouldn't have either). In fact, the change in question happened to line up at the perfect intersection of the ["Swiss cheese slices"](https://en.wikipedia.org/wiki/Swiss_cheese_model) of our tests.
 
 Ultimately, it was caught because as a human working with a critical system, I was nervous enough to ask for one more test than I strictly needed.
 
