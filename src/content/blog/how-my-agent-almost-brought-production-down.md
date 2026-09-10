@@ -171,27 +171,27 @@ Some readers might think "oh but if you only had _this type of test_ you would h
 
 ## So why did the agent add that `$`?
 
-I can't know, and neither can anyone else. That's kind of the problem, if you think about it. Nobody gets to open up the model and read off the reason, so everything below is speculation. But some of it is better founded than the rest, and it is worth spending a few words on it.
+I can't know, and neither can anyone else. That's kind of the problem, if you think about it. Nobody gets to open up the model and read off the reason, so everything below is speculation. But it is worth spending a few words on it, in my opinion.
 
-**The prompt left room for it.** I asked it to modify the routing file and update the tests. I did not say "change nothing else." Agents are trained to be helpful, and helpful can mean a tidier, more rigorous-looking version of the thing you asked for. `(?!www$|otherdomain$)` looks more precise than `(?!www|otherdomain)`. It looks like something a careful person would write.
+**The prompt left room for it.** I asked it to modify the routing file and update the tests. I did not say "change nothing else." Agents are trained to be helpful, and helpful can mean a tidier version of what I asked for. `(?!www$|otherdomain$)` looks more precise than `(?!www|otherdomain)`, so there's that.
 
-**The `$` form is the more familiar shape.** When you want to exclude an exact value, `(?!value$)` is usually the right thing to reach for (in every context where the value really is at the end of the string). That is a lot of contexts. Ours just isn't one of them.
+**The `$` form is the more familiar shape.** When you want to exclude an exact value, `(?!value$)` is usually the right thing to write (in every context where the value really is at the end of the string). That is a lot of contexts, but unfortunately ours wasn't one of them.
 
-**And there is no step where this gets checked.** This is the part I want to emphasize. The agent producing that line is predicting text, not executing a regex. Nothing in the process runs the pattern against `www.company.com` and looks at what comes back, like, say, a human might have done with an online regex tester or something. Unless the agent decides, on its own initiative, to go and test it (and it didn't), a plausible answer and a correct answer are just the same from the agent's perspective.
-
-It is worth remembering, too, that when I asked, the explanation I got back was not a record of a decision the agent had made earlier. It was written at the moment I asked for it, making it a reconstruction rather than a readout: not the same thing as knowing why the change was made.
+But really, nobody can know why this happened.
 
 ## Lessons learned
 
+### If you are delegating to agents, your tests better be thorough
+
+Outside of your own tests, there is no extra step where things get checked for correctness. The agent producing that line is just predicting text. Nothing in the process runs the pattern against `www.company.com` and looks at what comes back, like, say, a human might have done with an online regex tester or something. 
+
 ### Agents will change things you didn't ask them to change
 
-I asked for one subdomain to be added to an exception. I got that, but I also got an unrequested edit to a part of the regex that was already working.
+I asked for one subdomain to be added to an exception, and I got that, but I also got an unrequested edit to something that was already working fine. The agent didn't exactly _hide_ it, but nothing marked it as noteworthy. It arrived in the same diff, bundled with the change I wanted and with no special mention. 
 
-The agent didn't _hide_ it, but nothing marked it out as different from the thing I had actually asked for. It arrived in the same diff, bundled with the change I wanted, and a single character inside a regex is about as easy to skim past as a change can be.
+A single character inside a regex is about as easy to skim past as a change can be, too. Luckily this was basically a one-line change that I asked for. Imagine it instead as part of a larger feature, of a few dozen lines of diff, going to production and bringing everything down like this. It would take me a while to notice that of all the lines changed, the culprit is actually this almost-identical-regex-but-with-one-character-different.
 
-And this was basically a one-line change that I asked for: imagine it as part of a larger diff, of a few dozen lines, going to production and bringing everything down like this. It would take me a while to notice that of all the lines changed, the culprit is actually this almost-identical-regex-but-with-one-character-different-from-the-one-I-asked-for.
-
-### Completely spec-driven development, without looking at the code, is still not viable — and possibly never will be
+### Completely spec-driven development, without looking at the code, is still a fantasy
 
 If no human had looked at that code, nobody would have noticed the addition. The agent didn't consider it worth mentioning, and didn't even consider it worth testing, because it was a case that was already working and not part of our changes.
 
@@ -199,22 +199,20 @@ So "programmers will only look at specs, and the code will become a black box" w
 
 ### The agent could not see the blast radius
 
-Nothing in that file says _this block is 100% of production traffic_. But I knew it, and not because I am clever, but because I had context that exists nowhere in the repository: which environments use which hostname, what the deploy pipeline does and does not check, and how long that subdomain has been quietly serving every request the business depends on.
-
-This taught me that an agent and a human can read the same file and see very different things: just any old NGINX configuration block, versus a single point of failure for an entire network of production systems.
+Nothing in that file says _this block is one of the most critical parts of our infrastructure_. But I knew it, and not because I am clever, but because I had context that exists nowhere in the repository. An agent and a human can read the same file and see very different things: just any old NGINX configuration block, versus a single point of failure for an entire network of production systems.
 
 ### Agents are good tools, but humans have different incentives
 
 You want to know the real reason I, a human, added that test? Was it because I am the best, most disciplined programmer ever, and this post is just a humble brag? (I mean, yes — but also.) The real reason was fear.
 
-As a human, I am a coward, and yes: I do fear making production changes to systems I know to be Very Important Systems belonging to a Very Important Company, which also happens to pay my salary. So I try to be really, really careful when I do it. Because I would very much like to keep my job, thankyouverymuch. And also because I have a healthy sense of reverence for a system I know to be a single point of failure for thousands and thousands of user requests that are generating billions in revenue.
+As a human, I am a coward, and yes: I do fear making production changes to systems I know to be Very Important Systems belonging to a Very Important Company, which also happens to pay my salary. So I try to be really, really careful when I do it, because I would very much like to keep my job. And also because I have a healthy sense of reverence for a system I know to be a single point of failure for thousands and thousands of user requests that are generating billions in revenue.
 
-An agent simply does not have the same context, and it does not have the same incentives. So perhaps we should start seeing agents as _complementary_ to human developers, rather than as their replacement.
+An agent simply does not have the same context, and it does not have the same incentives.
 
 ## Conclusion
 
 So: humans 1, agents 0? Not quite.
 
-I am not going back to writing every line by hand, and I don't think every line deserves this much paranoia. Most lines don't, because they don't belong to systems like these. But that one did, and I believe it takes a human to tell them apart.
+I am not going back to writing every line by hand, and I don't think every line deserves this much paranoia. Most lines don't, because they don't belong to systems like these. But that one did, and I believe it takes a human to tell them apart. So perhaps we should start seeing agents as _complementary_ to human developers, rather than as their replacement.
 
-Which is the part I would want a director or an executive to take away from this. The agent did most of the work here, but the judgement came from a human who knew what that particular system was, and had something to lose if it broke. This is the quality gate that caught this: not the test suite we already had, not the monitoring, not the automated rollback, all of which would have waved it straight through. And it's the one quality gate that tends to get removed when the rush to adopt AI leads to sacrificing human oversight. No pressure!
+Which is the part I would want a director or an executive to take away from this. The agent did most of the work here, but the judgement came from a human who knew what that particular system was, and had something to lose if it broke. This is the quality gate that caught this: not the test suite we already had, not the monitoring, not the automated rollback, all of which would have happily promoted it to production. And it's the one quality gate that tends to get removed when the rush to adopt AI leads to sacrificing human oversight. No pressure!
