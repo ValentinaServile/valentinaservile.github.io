@@ -5,9 +5,11 @@ pubDate: '2026-09-08'
 categories: ['AI', 'Networking', 'Testing', 'NGINX']
 ---
 
-An agent I was working with made a one-character change to a config file that nobody had asked it to make. The change was entirely defensible and plausible-looking. I happened to notice it, asked about it, and the agent came back with a confident, entirely reasonable-sounding justification for it. And yet, that change would have sent 100% of a major retailer's web traffic into a redirect loop.
+An agent I was working with made a one-character change to a config file that nobody had asked it to make. The change was entirely defensible and plausible-looking. I happened to notice it, asked about it, and the agent came back with a confident, entirely reasonable justification for making it. 
 
-The change never shipped, but it almost did. This is not because our tests caught it (none of the ones we already had would have), and also not because our rolling deployment would have rolled it back (it wouldn't have either). In fact, the change in question happened to line up at the perfect intersection of the ["Swiss cheese slices"](https://en.wikipedia.org/wiki/Swiss_cheese_model) of our tests.
+And yet, that change would have sent 100% of a major retailer's web traffic into a redirect loop.
+
+The change never shipped, but it almost did, and that gives me pause. It wasn't stopped because our tests caught it (none of the ones we already had would have), and also not because our rolling deployment rolled it back (it wouldn't have either). In fact, the change in question happened to line up at the perfect intersection of the ["Swiss cheese slices"](https://en.wikipedia.org/wiki/Swiss_cheese_model) of our tests.
 
 Ultimately, it was caught because as a human working with a critical system, I was nervous enough to ask for one more test than I strictly needed.
 
@@ -165,7 +167,7 @@ The only way we could have found out would have been from the outside: orders dr
 
 ### "But surely if you X..."
 
-Some readers might think "oh but if you only had _this type of test_ you would have caught it", but no company is perfect — and this company is still pretty damn thorough. They know their testing pyramid. I am talking about AI usage in the real world here: there's bound to be some holes in the Swiss cheese, and this was one of ours.
+Some readers might think "oh but if you only had _this type of test_ you would have caught it", but no company is perfect — and this company is still pretty damn thorough. They know their testing pyramid. I am talking about AI usage in the real world here: there's bound to be some holes in the Swiss cheese, and this was one of ours. The point is, every company has its own imperfect testing, so agents will never operate under a 100% safety net.
 
 ## So why did the agent add that `$`?
 
@@ -175,9 +177,9 @@ I can't know, and neither can anyone else. That's kind of the problem, if you th
 
 **The `$` form is the more familiar shape.** When you want to exclude an exact value, `(?!value$)` is usually the right thing to reach for (in every context where the value really is at the end of the string). That is a lot of contexts. Ours just isn't one of them.
 
-**And there is no step where any of this gets checked.** This is the part I keep coming back to. The agent producing that line is predicting text, not executing a regex. Nothing in the process runs the pattern against `www.company.com` and looks at what comes back, like a human might have on an online regex tester while developing. Unless the agent decides, on its own initiative, to go and test it (and it didn't), a plausible answer and a correct answer are indistinguishable from the agent's perspective.
+**And there is no step where this gets checked.** This is the part I want to emphasize. The agent producing that line is predicting text, not executing a regex. Nothing in the process runs the pattern against `www.company.com` and looks at what comes back, like, say, a human might have done with an online regex tester or something. Unless the agent decides, on its own initiative, to go and test it (and it didn't), a plausible answer and a correct answer are just the same from the agent's perspective.
 
-It is worth remembering, too, that the explanation I got back was not a record of a decision the agent had made earlier. It was written at the moment I asked for it. That makes it a reconstruction rather than a readout, which is a reasonable thing for it to produce, but not the same thing as knowing why the change was made.
+It is worth remembering, too, that when I asked, the explanation I got back was not a record of a decision the agent had made earlier. It was written at the moment I asked for it, making it a reconstruction rather than a readout: not the same thing as knowing why the change was made.
 
 ## Lessons learned
 
